@@ -1,8 +1,6 @@
-import org.junit.jupiter.api.Disabled
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
-import kotlin.text.category
 
 class AnalyticsTest {
 
