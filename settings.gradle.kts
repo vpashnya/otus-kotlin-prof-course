@@ -1,6 +1,6 @@
 pluginManagement {
-  val kotlinVersion: String by settings
   plugins {
+    val kotlinVersion: String by settings
     kotlin("jvm") version kotlinVersion
   }
 }
@@ -18,3 +18,4 @@ include("m1l4-oop")
 include("m2l1-dsl")
 include("m2l2-coroutines")
 include("m2l3-flows")
+include("m2l4-kmp")
