@@ -10,4 +10,4 @@
 ### Kotlin ###
 /.kotlin/
 /.gigaide/gigaide.properties
-/lessons/.gradle/
+/*/.gradle/
