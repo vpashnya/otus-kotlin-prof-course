@@ -2,13 +2,18 @@ plugins {
   kotlin("jvm")
 }
 
+repositories {
+  mavenCentral()
+}
+
 dependencies {
-  testImplementation(kotlin("test-junit5"))
+  testImplementation(kotlin("test"))
 }
 
 tasks.test {
   useJUnitPlatform()
 }
+
 kotlin {
   jvmToolchain(21)
 }
