@@ -8,15 +8,34 @@ Integration Platform - интеграционная платформа для б
 TODO
 [//]: # (![Макет фронта]&#40;imgs/design-layout.png&#41;)
 
+## Документация
+
+1. Маркетинг и аналитика
+   1. [Целевая аудитория](docs/01-biz/01-target-audience.md)
+   2. [Заинтересанты](docs/01-biz/02-stakeholders.md)
+   3. [Пользовательские истории](docs/01-biz/03-bizreq.md)
+2. Аналитика:
+
+   1. [Функциональные требования](./docs/02-analysis/01-functional-requiremens.md)
+   2. [Нефункциональные требования](./docs/02-analysis/02-nonfunctional-requirements.md)
+
+3. Архитектура
+
+[//]: # (   1. [ADR]&#40;docs/03-architecture/01-adrs.md&#41;)
+[//]: # (   2. [Описание API]&#40;docs/03-architecture/02-api.md&#41;)
+[//]: # (   3. [Архитектурные схемы]&#40;docs/03-architecture/03-arch.md&#41;)
+
+
 # Структура проекта
 
-## Интеграционная платформа
+## Проект интеграционная платформа
 1. [integration-module](integration-platform/integration-module) - Модуль для приложения "Древний Монолит"
 2. [integration-service](integration-platform/integration-service) - Интеграционный сервис
 
 ## Gradle плагины
 1. Модуль 2: Расширенные возможности Kotlin<br>
-   1. [build-plugin](build-plugin) - Занятие 6 - Создание плагинов Gradle
+   1. [BuildPluginJvm.kt](build-plugin/src/main/kotlin/BuildPluginJvm.kt) - Плагин для сборки проектов JVM
+   2. [BuildPluginMultiplatform.kt](build-plugin/src/main/kotlin/BuildPluginMultiplatform.kt) - Плагин для сборки мультиплатформенных проектов 
 
 ## Подпроекты для занятий по языку Kotlin
 
