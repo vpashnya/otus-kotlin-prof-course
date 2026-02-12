@@ -1,0 +1,484 @@
+openapi: 3.0.3
+info:
+  title: "Integration platform ${VERSION_APP}"
+  description: Интеграционная платформа для банковского приложения "Древний монолит"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: stream
+    description: Интеграционный поток
+paths:
+  /stream/create:
+    post:
+      tags:
+        - stream
+      summary: Create stream
+      operationId: streamCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamCreateResponse'
+  /stream/read:
+    post:
+      tags:
+        - stream
+      summary: Read stream
+      operationId: streamRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamReadResponse'
+  /stream/update:
+    post:
+      tags:
+        - stream
+      summary: Update stream
+      operationId: streamUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamUpdateResponse'
+  /stream/delete:
+    post:
+      tags:
+        - stream
+      summary: Delete stream
+      operationId: streamDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamDeleteResponse'
+  /stream/search:
+    post:
+      tags:
+        - stream
+      summary: Search stream
+      operationId: streamSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamSearchResponse'
+  /stream/accessible:
+    post:
+      tags:
+        - stream
+      summary: view available streams
+      operationId: accessibleStreams
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessibleStreamsRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamAccessibleResponse'
+
+  /stream/enable:
+    post:
+      tags:
+        - stream
+      summary: enable stream
+      operationId: streamEnable
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamEnableRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamEnableResponse'
+
+  /stream/disable:
+    post:
+      tags:
+        - stream
+      summary: disable stream
+      operationId: streamEnable
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreamDisableRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamDisableResponse'
+
+components:
+  schemas:
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/StreamCreateRequest'
+          read: '#/components/schemas/StreamReadRequest'
+          update: '#/components/schemas/StreamUpdateRequest'
+          delete: '#/components/schemas/StreamDeleteRequest'
+          search: '#/components/schemas/StreamSearchRequest'
+          accessible: '#/components/schemas/AccessibleStreamsRequest'
+          enable: '#/components/schemas/StreamEnableRequest'
+          disable: '#/components/schemas/StreamDisableRequest'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/StreamCreateResponse'
+          read: '#/components/schemas/StreamReadResponse'
+          update: '#/components/schemas/StreamUpdateResponse'
+          delete: '#/components/schemas/StreamDeleteResponse'
+          search: '#/components/schemas/StreamSearchResponse'
+          accessible: '#/components/schemas/StreamAccessibleResponse'
+          enable: '#/components/schemas/StreamEnableResponse'
+          disable: '#/components/schemas/StreamDisableResponse'
+
+    BaseStream:
+      type: object
+      description: Объект описывает свойства, одинаковые для create и update
+      properties:
+        class:
+          $ref: '#/components/schemas/Class'
+        method:
+          $ref: '#/components/schemas/Method'
+        transportParams:
+          $ref: '#/components/schemas/TransportParams'
+        description:
+          $ref: '#/components/schemas/Description'
+
+    StreamId:
+      type: string
+      description: Идентификатор интеграционного потока
+    Class:
+      type: string
+      description: Класс запускаемого метода в приложении "Древний монолит"
+    Method:
+      type: string
+      description: Запускаемый метод в приложении "Древний монолит"
+    Active:
+      type: boolean
+      description: Включен ли поток
+    TransportParams:
+      type: string
+      description: Параметры транспорта от внешних систем
+    Description:
+      type: string
+      description: Описание интеграционного потока
+
+    StreamCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseStream'
+
+    StreamCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            stream:
+              $ref: '#/components/schemas/StreamCreateObject'
+
+    StreamReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            streamId:
+              $ref: '#/components/schemas/StreamId'
+
+    StreamUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseStream'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/StreamId'
+
+    StreamUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            stream:
+              $ref: '#/components/schemas/StreamUpdateObject'
+
+    StreamDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            streamId:
+              $ref: '#/components/schemas/StreamId'
+
+    StreamSearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка, по которой будет выполнятся поиск интеграционных потоков
+        class:
+          $ref: '#/components/schemas/Class'
+        method:
+          $ref: '#/components/schemas/Method'
+        active:
+          $ref: '#/components/schemas/Active'
+
+    StreamSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            streamFilter:
+              $ref: '#/components/schemas/StreamSearchFilter'
+
+    AccessibleStreamsRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            externalSystemId:
+              type: string
+              description: Идентификатор внешней системы
+
+    StreamEnableRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            streamId:
+              $ref: '#/components/schemas/StreamId'
+
+    StreamDisableRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/StreamRequestDebug'
+        - type: object
+          properties:
+            streamId:
+              $ref: '#/components/schemas/StreamId'
+
+    StreamResponseObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseStream'
+        - type: object
+          description: Объект, который возвращается в ответе бэкенда
+          properties:
+            id:
+              $ref: '#/components/schemas/StreamId'
+            class:
+              $ref: '#/components/schemas/Class'
+            method:
+              $ref: '#/components/schemas/Method'
+            active:
+              $ref: '#/components/schemas/Active'
+            transportParams:
+              $ref: '#/components/schemas/TransportParams'
+            description:
+              $ref: '#/components/schemas/Description'
+
+    StreamResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом интеграционным потоком
+          properties:
+            stream:
+              $ref: '#/components/schemas/StreamResponseObject'
+
+    StreamResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            streams:
+              type: array
+              items:
+                $ref: '#/components/schemas/StreamResponseObject'
+
+    StreamCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseSingle'
+
+    StreamReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseSingle'
+
+    StreamUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseSingle'
+
+    StreamDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseSingle'
+
+    StreamSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseMulti'
+
+    StreamAccessibleResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseMulti'
+
+    StreamEnableResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseSingle'
+
+    StreamDisableResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/StreamResponseSingle'
+
+    # STUBS ======================
+    StreamRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    StreamRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/StreamDebug'
+
+    StreamDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/StreamRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/StreamRequestDebugStubs'
+
+    StreamRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badDescription
+        - cannotDelete
+        - badSearchString
