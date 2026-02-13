@@ -159,7 +159,7 @@ paths:
       tags:
         - stream
       summary: disable stream
-      operationId: streamEnable
+      operationId: streamDisable
       requestBody:
         description: Request body
         content:
@@ -246,10 +246,10 @@ components:
       type: object
       description: Объект описывает свойства, одинаковые для create и update
       properties:
-        class:
-          $ref: '#/components/schemas/Class'
-        method:
-          $ref: '#/components/schemas/Method'
+        classShortName:
+          $ref: '#/components/schemas/ClassShortName'
+        methodShortName:
+          $ref: '#/components/schemas/MethodShortName'
         transportParams:
           $ref: '#/components/schemas/TransportParams'
         description:
@@ -258,10 +258,10 @@ components:
     StreamId:
       type: string
       description: Идентификатор интеграционного потока
-    Class:
+    ClassShortName:
       type: string
       description: Класс запускаемого метода в приложении "Древний монолит"
-    Method:
+    MethodShortName:
       type: string
       description: Запускаемый метод в приложении "Древний монолит"
     Active:
@@ -329,10 +329,10 @@ components:
         searchString:
           type: string
           description: Поисковая строка, по которой будет выполнятся поиск интеграционных потоков
-        class:
-          $ref: '#/components/schemas/Class'
-        method:
-          $ref: '#/components/schemas/Method'
+        classShortName:
+          $ref: '#/components/schemas/ClassShortName'
+        methodShortName:
+          $ref: '#/components/schemas/MethodShortName'
         active:
           $ref: '#/components/schemas/Active'
 
@@ -381,10 +381,10 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/StreamId'
-            class:
-              $ref: '#/components/schemas/Class'
-            method:
-              $ref: '#/components/schemas/Method'
+            classShortName:
+              $ref: '#/components/schemas/ClassShortName'
+            methodShortName:
+              $ref: '#/components/schemas/MethodShortName'
             active:
               $ref: '#/components/schemas/Active'
             transportParams:

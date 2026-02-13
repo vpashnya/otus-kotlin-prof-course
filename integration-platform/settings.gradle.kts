@@ -17,3 +17,4 @@ pluginManagement {
 
 include("integration-service")
 include("integration-module")
+include("integration-platform-api-v1")
