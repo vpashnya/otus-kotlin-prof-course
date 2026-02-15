@@ -4,6 +4,7 @@ import org.junit.jupiter.params.provider.EnumSource
 import ru.pvn.integration.platform.api.v1.models.Error
 import ru.pvn.integration.platform.api.v1.models.IRequest
 import ru.pvn.integration.platform.api.v1.models.IResponse
+import ru.pvn.integration.platform.api.v1.models.StreamAccessibleRequest
 import ru.pvn.integration.platform.api.v1.models.StreamAccessibleResponse
 import ru.pvn.integration.platform.api.v1.models.StreamCreateObject
 import ru.pvn.integration.platform.api.v1.models.StreamCreateRequest
@@ -86,6 +87,10 @@ class RequestV1SerializationTests {
         )
       ),
       json = """{"requestType":"search","requestType":null,"debug":null,"streamFilter":{"searchString":"classShorName = 'KREDS%' and methodShortName = '%'  ","classShortName":"DEPOSIT","methodShortName":"OEPN","active":false}}"""
+    ),
+    STREAM_ACCESSIBLE(
+      request = StreamAccessibleRequest(),
+      json = """{"requestType":"accessible","requestType":null,"debug":null,"externalSystemId":null}"""
     )
   }
 

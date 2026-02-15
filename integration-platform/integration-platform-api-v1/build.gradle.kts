@@ -5,6 +5,9 @@ plugins {
   alias(libs.plugins.openapi.generator)
 }
 
+group = rootProject.group
+version = rootProject.version
+
 sourceSets {
   main {
     java.srcDir(layout.buildDirectory.dir("generate-resources/main/src/main/kotlin"))

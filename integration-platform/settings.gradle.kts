@@ -15,6 +15,8 @@ pluginManagement {
   }
 }
 
-include("integration-service")
-include("integration-module")
-include("integration-platform-api-v1")
+include(":integration-service")
+include(":integration-module")
+include(":integration-platform-common")
+include(":integration-platform-api-v1")
+include(":integration-platform-api-v1-mappers")

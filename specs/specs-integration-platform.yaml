@@ -123,7 +123,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccessibleStreamsRequest'
+              $ref: '#/components/schemas/StreamAccessibleRequest'
         required: true
       responses:
         200:
@@ -193,7 +193,7 @@ components:
           update: '#/components/schemas/StreamUpdateRequest'
           delete: '#/components/schemas/StreamDeleteRequest'
           search: '#/components/schemas/StreamSearchRequest'
-          accessible: '#/components/schemas/AccessibleStreamsRequest'
+          accessible: '#/components/schemas/StreamAccessibleRequest'
           enable: '#/components/schemas/StreamEnableRequest'
           disable: '#/components/schemas/StreamDisableRequest'
 
@@ -343,7 +343,7 @@ components:
             streamFilter:
               $ref: '#/components/schemas/StreamSearchFilter'
 
-    AccessibleStreamsRequest:
+    StreamAccessibleRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - $ref: '#/components/schemas/StreamRequestDebug'
