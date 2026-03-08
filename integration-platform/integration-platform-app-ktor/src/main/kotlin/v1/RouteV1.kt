@@ -3,16 +3,17 @@ package ru.pvn.integration.v1
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
+import ru.pvn.integration.ApplicationSettings
 
-fun Route.v1IP() {
-  route("ip") {
-    post("stream/create") { call.streamCreate() }
-    post("stream/read") { call.streamRead() }
-    post("stream/search") { call.streamSearch() }
-    post("stream/update") { call.streamUpdate() }
-    post("stream/delete") { call.streamDelete() }
-    post("stream/enable") { call.streamEnable() }
-    post("stream/disable") { call.streamDisable() }
-    post("stream/accessible") { call.streamAccessible() }
+fun Route.v1IP(appSettings: ApplicationSettings) {
+  route("ip/stream") {
+    post("create") { call.streamCreate(appSettings) }
+    post("read") { call.streamRead(appSettings) }
+    post("search") { call.streamSearch(appSettings) }
+    post("update") { call.streamUpdate(appSettings) }
+    post("delete") { call.streamDelete(appSettings) }
+    post("enable") { call.streamEnable(appSettings) }
+    post("disable") { call.streamDisable(appSettings) }
+    post("accessible") { call.streamAccessible(appSettings) }
   }
 }

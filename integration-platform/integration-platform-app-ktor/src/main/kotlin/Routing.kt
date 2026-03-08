@@ -8,7 +8,7 @@ import io.ktor.server.routing.*
 import ru.pvn.integration.v1.v1IP
 
 
-fun Application.configureRouting() {
+fun Application.configureRouting(settings: ApplicationSettings) {
   routing {
     route("v1") {
       install(ContentNegotiation) {
@@ -17,7 +17,7 @@ fun Application.configureRouting() {
           setConfig(apiV1Mapper.deserializationConfig)
         }
       }
-      v1IP()
+      v1IP(settings)
     }
   }
 }
