@@ -1,4 +1,4 @@
-package ru.pvn.integration
+package ru.pvn.integration.platform.ktor
 
 import io.ktor.server.application.*
 

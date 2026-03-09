@@ -1,13 +1,11 @@
-package ru.pvn.integration.v1
+package ru.pvn.integration.ktor.v1
 
 import fromTransport
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
-import org.slf4j.Logger;
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import ru.pvn.integration.ApplicationSettings
-import ru.pvn.integration.Mode
 import ru.pvn.integration.platform.api.v1.models.IRequest
 import ru.pvn.integration.platform.api.v1.models.IResponse
 import ru.pvn.integration.platform.api.v1.models.StreamAccessibleRequest
@@ -26,6 +24,8 @@ import ru.pvn.integration.platform.api.v1.models.StreamSearchRequest
 import ru.pvn.integration.platform.api.v1.models.StreamSearchResponse
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateRequest
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateResponse
+import ru.pvn.integration.platform.ktor.ApplicationSettings
+import ru.pvn.integration.platform.ktor.Mode
 import ru.pvn.learning.IPContext
 import ru.pvn.learning.helpers.makeIPError
 import ru.pvn.learning.models.IPState.*
@@ -62,7 +62,7 @@ suspend inline fun <reified Q : IRequest, reified R : IResponse> ApplicationCall
   }
 }
 
-val LOGG_CREATE = LoggerFactory.getLogger("process.v1.create")
+val LOG_CREATE = LoggerFactory.getLogger("process.v1.create")
 val LOG_READ = LoggerFactory.getLogger("process.v1.read")
 val LOG_UPDATE = LoggerFactory.getLogger("process.v1.update")
 val LOG_DELETE = LoggerFactory.getLogger("process.v1.delete")
@@ -72,7 +72,7 @@ val LOG_ENABLE = LoggerFactory.getLogger("process.v1.enable")
 val LOG_ACCESIBLE = LoggerFactory.getLogger("process.v1.accesible")
 
 suspend fun ApplicationCall.streamCreate(appSettings: ApplicationSettings) =
-  processV1<StreamCreateRequest, StreamCreateResponse>(appSettings, LOGG_CREATE)
+  processV1<StreamCreateRequest, StreamCreateResponse>(appSettings, LOG_CREATE)
 
 suspend fun ApplicationCall.streamRead(appSettings: ApplicationSettings) =
   processV1<StreamReadRequest, StreamReadResponse>(appSettings, LOG_READ)

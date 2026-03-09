@@ -1,7 +1,7 @@
-package ru.pvn.integration
+package ru.pvn.integration.platform.ktor
 
 import IPStreamProcessor
-import ru.pvn.integration.Mode.PROD
+
 
 data class ApplicationSettings(
   val mode: Mode,
@@ -13,6 +13,6 @@ enum class Mode {
 }
 
 fun initApplicationSettings() = ApplicationSettings(
-  mode = PROD,
+  mode = Mode.PROD,
   ipStreamProcessor = IPStreamProcessor()
 )

@@ -1,9 +1,10 @@
-package ru.pvn.integration.v1
+package ru.pvn.integration.ktor.v1
 
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
-import ru.pvn.integration.ApplicationSettings
+import ru.pvn.integration.platform.ktor.ApplicationSettings
+
 
 fun Route.v1IP(appSettings: ApplicationSettings) {
   route("ip/stream") {

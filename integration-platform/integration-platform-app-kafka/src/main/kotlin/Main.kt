@@ -1,11 +1,7 @@
 package ru.pvn.integration.platform
 
-import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.clients.producer.KafkaProducer
-import ru.pvn.integration.platform.ApplicationSettings
-
 fun main() {
-  val applicationConfig = getApplicationConfig();
+  val applicationConfig = getApplicationConfig()
   val applicationSettings = initApplicationSettings(applicationConfig)
 
   val ipStreamConsumer = applicationConfig.createIPStreamConsumer()
