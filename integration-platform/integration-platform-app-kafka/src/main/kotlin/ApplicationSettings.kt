@@ -1,7 +1,7 @@
-package ru.pvn.integration
+package ru.pvn.integration.platform
 
 import IPStreamProcessor
-import ru.pvn.integration.Mode.PROD
+
 
 data class ApplicationSettings(
   val mode: Mode,
@@ -12,7 +12,7 @@ enum class Mode {
   PROD, TEST, STUB
 }
 
-fun initApplicationSettings() = ApplicationSettings(
-  mode = PROD,
+fun initApplicationSettings(applicationConfig: ApplicationConfig) = ApplicationSettings(
+  mode = Mode.valueOf(applicationConfig.mode),
   ipStreamProcessor = IPStreamProcessor()
 )

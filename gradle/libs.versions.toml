@@ -8,6 +8,7 @@ openapi-generator = "7.12.0"
 jackson = "2.18.3"
 ktor = "3.4.0"
 logback = "1.4.14"
+coroutines = "1.9.0"
 
 # BASE
 jvm-compiler = "17"
@@ -19,11 +20,20 @@ plugin-binaryCompatibilityValidator = "org.jetbrains.kotlinx:binary-compatibilit
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime-version" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+jackson-datatype = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
+jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.23.2" }
+
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "coroutines" }
+coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "coroutines" }
+
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jupiter-version"}
 jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "jupiter-version"}
 jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter-version"}
-jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
-jackson-datatype = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
@@ -34,10 +44,12 @@ ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negoti
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-server-tomcat-jakarta = { module = "io.ktor:ktor-server-tomcat-jakarta", version.ref = "ktor" }
-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+kafka-client = { module = "org.apache.kafka:kafka-clients", version = "3.7.0" }
 
 
 [plugins]
