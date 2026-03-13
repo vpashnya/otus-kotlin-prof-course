@@ -5,8 +5,8 @@ import apiV1ResponseSerialize
 import fromTransport
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import ru.pvn.integration.platform.ApplicationSettings
-import ru.pvn.integration.platform.Mode
+import ru.pvn.integration.platform.kafka.ApplicationSettings
+import ru.pvn.integration.platform.kafka.Mode
 import ru.pvn.integration.platform.api.v1.models.IRequest
 import ru.pvn.learning.IPContext
 import ru.pvn.learning.helpers.makeIPError
@@ -21,7 +21,6 @@ suspend fun processV1(
   request: String,
   logger: Logger = LOG,
 ): String {
-
   val context = IPContext(
     workMode = when (applicationSettings.mode) {
       Mode.PROD -> IPWorkMode.PROD
@@ -31,25 +30,22 @@ suspend fun processV1(
   )
 
   try {
-    logger.info("Message deserialize...")
+    logger.info("Request started")
     val request = apiV1RequestDeserialize<IRequest>(request)
     context.fromTransport(request)
-    logger.info("Message deserialized")
 
-    logger.info("Message process")
+    logger.info("Request in processing...")
     applicationSettings.ipStreamProcessor.exec(context)
-    logger.info("Message processed")
+    logger.info("Request processed")
 
   } catch (e: Throwable) {
-    logger.error("Failed ${e.message}")
+    logger.error("Request failed ${e.message}")
     context.state = FAILING
     context.errors.add(e.makeIPError())
 
   }
 
-  logger.info("Return response")
   val response = apiV1ResponseSerialize(context.toTransport())
-  logger.debug("response : $response")
 
   return response
 }

@@ -34,11 +34,11 @@ import toTransport
 
 
 suspend inline fun <reified Q : IRequest, reified R : IResponse> ApplicationCall.processV1(
-  appSettings: ApplicationSettings,
+  applicationSettings: ApplicationSettings,
   logger: Logger,
 ) {
   val context = IPContext(
-    workMode = when (appSettings.mode) {
+    workMode = when (applicationSettings.mode) {
       Mode.PROD -> IPWorkMode.PROD
       Mode.STUB -> IPWorkMode.STUB
       Mode.TEST -> IPWorkMode.TEST
@@ -47,19 +47,23 @@ suspend inline fun <reified Q : IRequest, reified R : IResponse> ApplicationCall
 
   try {
     logger.info("Request started")
-    context.fromTransport(receive<Q>())
-    val processor = appSettings.ipStreamProcessor
-    processor.exec(context)
+    val request = receive<Q>()
+    context.fromTransport(request)
+
+    logger.info("Request in processing...")
+    applicationSettings.ipStreamProcessor.exec(context)
     logger.info("Request processed")
-    respond(context.toTransport() as R)
 
   } catch (e: Throwable) {
-    logger.info("Request failed")
+    logger.error("Request failed ${e.message}")
     context.state = FAILING
     context.errors.add(e.makeIPError())
-    respond(context.toTransport() as R)
 
   }
+
+  val response = context.toTransport() as R
+
+  respond(response)
 }
 
 val LOG_CREATE = LoggerFactory.getLogger("process.v1.create")

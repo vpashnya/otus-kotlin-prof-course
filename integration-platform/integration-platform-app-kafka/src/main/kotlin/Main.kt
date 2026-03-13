@@ -1,4 +1,6 @@
-package ru.pvn.integration.platform
+package ru.pvn.integration.platform.kafka
+
+
 
 fun main() {
   val applicationConfig = getApplicationConfig()

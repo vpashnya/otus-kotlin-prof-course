@@ -1,14 +1,6 @@
-package ru.pvn.integration.platform
+package ru.pvn.integration.platform.kafka
 
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.kafka.common.serialization.StringSerializer
-import java.util.Properties
 import kotlin.String
-import kotlin.jvm.java
 
 data class ApplicationConfig(
   val mode: String,
@@ -20,10 +12,13 @@ data class ApplicationConfig(
 
 fun getApplicationConfig() =
   ApplicationConfig(
-    mode = System.getenv("MODE"),
-    kafkaHosts = System.getenv("KAFKA_HOSTS").split("\\s*[,; ]\\s*"),
-    kafkaGroupId = System.getenv("KAFKA_GROUP_ID"),
-    kafkaIPStreamTopicIn = System.getenv("KAFKA_IP_STREAM_TOPIC_V1_IN"),
-    kafkaIPStreamTopicOut = System.getenv("KAFKA_IP_STREAM_TOPIC_V1_OUT"),
+    mode = getRequiredEnv("MODE"),
+    kafkaHosts = getRequiredEnv("KAFKA_HOSTS").split("\\s*[,; ]\\s*"),
+    kafkaGroupId = getRequiredEnv("KAFKA_GROUP_ID"),
+    kafkaIPStreamTopicIn = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_IN"),
+    kafkaIPStreamTopicOut = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_OUT"),
   )
 
+fun getRequiredEnv(name: String): String {
+  return System.getenv(name) ?: throw IllegalArgumentException("Missing required environment variable: $name")
+}

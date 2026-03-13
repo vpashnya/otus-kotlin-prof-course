@@ -1,4 +1,4 @@
-package ru.pvn.integration.platform
+package ru.pvn.integration.platform.kafka
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer

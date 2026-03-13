@@ -1,16 +1,9 @@
-package ru.pvn.integration
-
-import ru.pvn.integration.platform.ktor.Mode.*
-import ru.pvn.integration.platform.ktor.ApplicationSettings
-import IPStreamProcessor
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.SerializationFeature
-import io.ktor.client.call.body
-import io.ktor.serialization.jackson.jackson
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.server.testing.testApplication
-import io.ktor.http.*
-import io.ktor.client.request.*
+import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.clients.consumer.MockConsumer
+import org.apache.kafka.clients.consumer.OffsetResetStrategy
+import org.apache.kafka.clients.producer.MockProducer
+import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import ru.pvn.integration.platform.api.v1.models.Error
@@ -40,17 +33,21 @@ import ru.pvn.integration.platform.api.v1.models.StreamSearchResponse
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateObject
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateRequest
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateResponse
-import ru.pvn.integration.platform.ktor.module
+import ru.pvn.integration.platform.kafka.ApplicationConfig
+import ru.pvn.integration.platform.kafka.IPStreamHandler
+import ru.pvn.integration.platform.kafka.createIPStreamTopicPair
+import ru.pvn.integration.platform.kafka.initApplicationSettings
+import java.util.Collections
 import kotlin.test.assertEquals
 
+
 class ApplicationV1StubApiTests {
+
   enum class RequestCases(
-    val route: String,
     val request: IRequest,
     val response: IResponse,
   ) {
     STREAM_CREATE_NORMAL(
-      route = "create",
       request = StreamCreateRequest(
         debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -76,7 +73,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_CREATE_ERROR(
-      route = "create",
       request = StreamCreateRequest(
         debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -96,7 +92,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_UPDATE_NORMAL(
-      route = "update",
       request = StreamUpdateRequest(
         debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -124,7 +119,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_UPDATE_ERROR(
-      route = "update",
       request = StreamUpdateRequest(
         debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -145,7 +139,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_DELETE_NORMAL(
-      route = "delete",
       request = StreamDeleteRequest(
         streamId = "12345",
         debug = StreamDebug(
@@ -166,7 +159,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_DELETE_ERROR(
-      route = "delete",
       request = StreamDeleteRequest(
         streamId = "12345",
         debug = StreamDebug(
@@ -181,7 +173,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_READ_NORMAL(
-      route = "read",
       request = StreamReadRequest(
         streamId = "12345", debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -201,7 +192,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_READ_ERROR(
-      route = "read",
       request = StreamReadRequest(
         streamId = "123",
         debug = StreamDebug(
@@ -216,7 +206,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_ENABLE_NORMAL(
-      route = "enable",
       request = StreamEnableRequest(
         streamId = "456", debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -236,7 +225,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_ENABLE_ERROR(
-      route = "enable",
       request = StreamEnableRequest(
         streamId = "789", debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -250,7 +238,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_DISABLE_NORMAL(
-      route = "disable",
       request = StreamDisableRequest(
         streamId = "456", debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -270,7 +257,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_DISABLE_ERROR(
-      route = "disable",
       request = StreamDisableRequest(
         streamId = "789", debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
@@ -284,7 +270,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_SEARCH_NORMAL(
-      route = "search",
       request = StreamSearchRequest(
         streamFilter = StreamSearchFilter(
           searchString = """classShorName = 'KREDS%' and methodShortName = '%'  """,
@@ -319,7 +304,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_SEARCH_ERROR(
-      route = "search",
       request = StreamSearchRequest(
         streamFilter = StreamSearchFilter(
           searchString = """classShorName = 'KREDS%' and methodShortName = '%'  """,
@@ -338,7 +322,6 @@ class ApplicationV1StubApiTests {
       )
     ),
     STREAM_ACCESSIBLE(
-      route = "accessible",
       request = StreamAccessibleRequest(
         externalSystemId = "11",
         debug = StreamDebug(
@@ -370,28 +353,36 @@ class ApplicationV1StubApiTests {
     ),
   }
 
+  private val applicationConfig = ApplicationConfig(
+    mode = "STUB",
+    kafkaHosts = emptyList(),
+    kafkaGroupId = "",
+    kafkaIPStreamTopicIn = "test.in",
+    kafkaIPStreamTopicOut = "test.out",
+  )
+
+  private val applicationSettings = initApplicationSettings(applicationConfig)
+  private val topicPair = applicationConfig.createIPStreamTopicPair()
+  private val consumer = MockConsumer<String, String>(OffsetResetStrategy.EARLIEST)
+  private val producer = MockProducer<String, String>(true, StringSerializer(), StringSerializer())
+  private val handler = IPStreamHandler(applicationSettings = applicationSettings, consumer = consumer, producer = producer, topics = topicPair,)
+  private val beginningOffset = mutableMapOf(TopicPartition("test.in", 0) to 0L)
+
   @ParameterizedTest
   @EnumSource
-  fun routeTest(testCase: RequestCases) = testApplication {
-    application {
-      module(ApplicationSettings(mode = STUB, ipStreamProcessor = IPStreamProcessor()))
+  fun test(case: RequestCases) {
+    consumer.updateBeginningOffsets(beginningOffset)
+    consumer.schedulePollTask {
+      consumer.rebalance(Collections.singletonList(TopicPartition("test.in", 0)))
+      consumer.addRecord(ConsumerRecord(topicPair.incoming, 0, 0, null, apiV1RequestSerialize(case.request)))
+      handler.close()
     }
 
-    val client = createClient {
-      install(ContentNegotiation) {
-        jackson {
-          disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-          enable(SerializationFeature.INDENT_OUTPUT)
-          writerWithDefaultPrettyPrinter()
-        }
-      }
-    }
+    handler.start()
 
-    val response = client.post("/v1/ip/stream/${testCase.route}") {
-      contentType(ContentType.Application.Json)
-      setBody(testCase.request)
-    }
-    assertEquals(response.body(), testCase.response)
+    val message = producer.history().first()
+    val result = apiV1ResponseDeserialize<IResponse>(message.value())
+    assertEquals(case.response, result)
   }
 
 }

@@ -6,6 +6,6 @@ fun main(args: Array<String>) {
   io.ktor.server.tomcat.jakarta.EngineMain.main(args)
 }
 
-fun Application.module(appSettings: ApplicationSettings = initApplicationSettings()) {
+fun Application.module(appSettings: ApplicationSettings = initApplicationSettings(getApplicationConfig())) {
   configureRouting(appSettings)
 }

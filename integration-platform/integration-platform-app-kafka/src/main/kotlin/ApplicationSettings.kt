@@ -1,4 +1,4 @@
-package ru.pvn.integration.platform
+package ru.pvn.integration.platform.kafka
 
 import IPStreamProcessor
 

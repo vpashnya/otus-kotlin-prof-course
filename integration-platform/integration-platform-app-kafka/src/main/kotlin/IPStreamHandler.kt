@@ -1,13 +1,13 @@
-package ru.pvn.integration.platform
+package ru.pvn.integration.platform.kafka
 
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.ConsumerRecords
-import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
 import ru.pvn.integration.platform.kafka.v1.processV1
@@ -18,8 +18,8 @@ import kotlin.collections.forEach
 
 class IPStreamHandler(
   val applicationSettings: ApplicationSettings,
-  val consumer: KafkaConsumer<String, String>,
-  val producer: KafkaProducer<String, String>,
+  val consumer: Consumer<String, String>,
+  val producer: Producer<String, String>,
   val topics: TopicPair,
 ) : AutoCloseable {
   private val logger = LoggerFactory.getLogger(IPStreamHandler::class.java)

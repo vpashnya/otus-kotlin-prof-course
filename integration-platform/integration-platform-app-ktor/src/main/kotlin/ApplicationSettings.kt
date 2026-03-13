@@ -12,7 +12,7 @@ enum class Mode {
   PROD, TEST, STUB
 }
 
-fun initApplicationSettings() = ApplicationSettings(
-  mode = Mode.PROD,
+fun initApplicationSettings(applicationConfig: ApplicationConfig) = ApplicationSettings(
+  mode = Mode.valueOf(applicationConfig.mode),
   ipStreamProcessor = IPStreamProcessor()
 )
