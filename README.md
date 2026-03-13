@@ -30,6 +30,12 @@ Integration Platform - интеграционная платформа для б
 ## Проект интеграционная платформа
 1. [integration-module](integration-platform/integration-module) - Модуль для приложения "Древний Монолит"
 2. [integration-service](integration-platform/integration-service) - Интеграционный сервис
+3. [integration-platform-common](integration-platform/integration-platform-common) - Внутренние модели
+4. [integration-platform-api-v1](integration-platform/integration-platform-api-v1) - Api версия 1
+5. [integration-platform-api-v1-mappers](integration-platform/integration-platform-api-v1-mappers) - Мапперы для api версия 1   
+6. [integration-platform-business-logic](integration-platform/integration-platform-business-logic) - Бизнес логика
+7. [integration-platform-app-ktor](integration-platform/integration-platform-app-ktor) - Веб приложение на ktor 
+8. [integration-platform-app-kafka](integration-platform/integration-platform-app-kafka) - Транспортное приложение для kafka
 
 ## Gradle плагины
 1. Модуль 2: Расширенные возможности Kotlin<br>
