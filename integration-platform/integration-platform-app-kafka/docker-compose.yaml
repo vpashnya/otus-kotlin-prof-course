@@ -1,0 +1,59 @@
+version: "0.1"
+services:
+  app-kafka:
+    depends_on:
+      - "kafka1"
+      - "kafdrop"
+    build:
+      context: .
+    environment:
+      MODE: "STUB"
+      KAFKA_HOSTS: "kafka1:29092"
+      KAFKA_GROUP_ID: "integration-platform"
+      KAFKA_IP_STREAM_TOPIC_V1_IN: "ip.stream.v1.in"
+      KAFKA_IP_STREAM_TOPIC_V1_OUT: "ip.stream.v1.out"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.7
+    container_name: my-zookeeper
+    healthcheck:
+      test: "[[ $$(echo srvr | nc localhost 2181 | grep -oG 'Mode: standalone') = \'Mode: standalone\' ]]"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka1:
+    image: confluentinc/cp-kafka:7.7.7
+    container_name: kafka1
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9092:9092"
+      - "9101:9101" # Для мониторинга (JMX)
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+    hostname: kafka1
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:4.0.1
+    container_name: kafdrop-view
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka1:29092"
+    depends_on:
+      - "kafka1"
+    restart: "no"

@@ -39,3 +39,18 @@ dependencies {
 tasks.test {
   useJUnitPlatform()
 }
+
+tasks.withType<Jar> {
+  manifest {
+    attributes["Main-Class"] = "ru.pvn.integration.platform.ktor.ApplicationKt"
+  }
+
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  from(sourceSets.main.get().output)
+
+  dependsOn(configurations.runtimeClasspath)
+  from({
+    configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+  })
+}
