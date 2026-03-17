@@ -11,3 +11,6 @@
 /.kotlin/
 /.gigaide/gigaide.properties
 /*/.gradle/
+
+### environment params ###
+.env

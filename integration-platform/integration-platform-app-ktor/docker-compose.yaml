@@ -1,0 +1,9 @@
+version: "0.1"
+services:
+  app-ktor:
+    build:
+      context: .
+    ports:
+      - "8888:8080"
+    environment:
+      MODE: "STUB"
