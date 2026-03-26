@@ -22,6 +22,9 @@ class DslPerformerSingle<T> {
 
   fun build() = PerformerSingle(conditionFunction, mainFunction, exceptionFunction)
 
-  fun performer(func: DslPerformerSingle<T>.() -> Unit): PerformerSingle<T> =
-    apply { func() }.build()
+  fun performer(func: DslPerformerSingle<T>.() -> Unit): PerformerSingle<T> {
+    func()
+    return build()
+  }
+
 }

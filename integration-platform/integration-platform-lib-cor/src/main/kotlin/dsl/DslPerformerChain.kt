@@ -5,14 +5,22 @@ import ru.pvn.integration.platform.lib.cor.PerformerChain
 
 @CorDslMarker
 class DslPerformerChain<T> {
-  private val performers: MutableList<IPerformer<T>> = mutableListOf()
+  private var conditionFunction: T.() -> Boolean = { true }
+  private val perfs: MutableList<IPerformer<T>> = mutableListOf()
+
+  fun conditionF(func: T.() -> Boolean) {
+    conditionFunction = func
+  }
 
   fun performer(func: DslPerformerSingle<T>.() -> Unit) =
-    performers.add(DslPerformerSingle<T>().performer(func))
+    perfs.add(DslPerformerSingle<T>().performer(func))
 
   fun performers(func: DslPerformerChain<T>.() -> Unit) =
-    performers.add(DslPerformerChain<T>().apply { func() }.build())
+    DslPerformerChain<T>()
+      .apply { func() }
+      .build()
+      .also { perfs.add(it) }
 
-  fun build() = PerformerChain(performers = performers)
+  fun build() = PerformerChain(conditionFunction, perfs)
 
 }

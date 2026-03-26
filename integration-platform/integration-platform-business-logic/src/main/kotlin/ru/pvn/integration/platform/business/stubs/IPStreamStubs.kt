@@ -1,27 +1,11 @@
 package ru.pvn.integration.platform.business.stubs
 
 import ru.pvn.learning.IPContext
-import ru.pvn.learning.models.IPCommand
 import ru.pvn.learning.models.IPError
 import ru.pvn.learning.models.IPState
 import ru.pvn.learning.models.IPStream
 import ru.pvn.learning.models.IPStreamId
 import ru.pvn.learning.stubs.IPStubs.*
-
-
-fun execStubs(context: IPContext) = context.apply {
-  when (command) {
-    IPCommand.CREATE -> createStubs()
-    IPCommand.UPDATE -> updateStubs()
-    IPCommand.DELETE -> deleteStubs()
-    IPCommand.READ -> readStubs()
-    IPCommand.ENABLE -> enableStubs()
-    IPCommand.DISABLE -> disableStubs()
-    IPCommand.SEARCH -> searchStubs()
-    IPCommand.ACCESSIBLE -> searchAccessible()
-    IPCommand.NONE -> null
-  }
-}
 
 fun IPContext.createStubs() =
   when (stubCase) {
@@ -186,4 +170,3 @@ fun IPContext.searchAccessible() {
     ),
   )
 }
-
