@@ -5,10 +5,10 @@ import ru.pvn.integration.platform.lib.cor.PerformerChain
 
 @CorDslMarker
 class DslPerformerChain<T> {
-  private var conditionFunction: T.() -> Boolean = { true }
+  private var conditionFunction: suspend T.() -> Boolean = { true }
   private val perfs: MutableList<IPerformer<T>> = mutableListOf()
 
-  fun conditionF(func: T.() -> Boolean) {
+  fun conditionF(func: suspend T.() -> Boolean) {
     conditionFunction = func
   }
 

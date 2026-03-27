@@ -4,19 +4,19 @@ import ru.pvn.integration.platform.lib.cor.PerformerSingle
 
 @CorDslMarker
 class DslPerformerSingle<T> {
-  var conditionFunction: T.() -> Boolean = { true }
-  var mainFunction: T.() -> Unit = {}
-  var exceptionFunction: T.(Exception) -> Unit = {}
+  var conditionFunction: suspend T.() -> Boolean = { true }
+  var mainFunction: suspend T.() -> Unit = {}
+  var exceptionFunction: suspend T.(Exception) -> Unit = {}
 
-  fun conditionF(func: T.() -> Boolean) {
+  fun conditionF(func: suspend T.() -> Boolean) {
     conditionFunction = func
   }
 
-  fun mainF(func: T.() -> Unit) {
+  fun mainF(func: suspend T.() -> Unit) {
     mainFunction = func
   }
 
-  fun exceptionF(func: T.(Exception) -> Unit) {
+  fun exceptionF(func: suspend T.(Exception) -> Unit) {
     exceptionFunction = func
   }
 

@@ -1,46 +1,67 @@
+
 import ru.pvn.integration.platform.business.dsl.command
-import ru.pvn.integration.platform.business.dsl.stub
-import ru.pvn.integration.platform.business.stubs.createStubs
-import ru.pvn.integration.platform.business.stubs.deleteStubs
-import ru.pvn.integration.platform.business.stubs.disableStubs
-import ru.pvn.integration.platform.business.stubs.enableStubs
-import ru.pvn.integration.platform.business.stubs.readStubs
-import ru.pvn.integration.platform.business.stubs.searchAccessible
-import ru.pvn.integration.platform.business.stubs.searchStubs
-import ru.pvn.integration.platform.business.stubs.updateStubs
+import ru.pvn.integration.platform.business.dsl.initState
+import ru.pvn.integration.platform.business.dsl.stubs
+import ru.pvn.integration.platform.business.stubs.*
 import ru.pvn.integration.platform.lib.cor.dsl.createChain
 import ru.pvn.learning.IPContext
-import ru.pvn.learning.models.IPCommand
+import ru.pvn.learning.models.IPCommand.*
 
 class IPStreamProcessor {
   suspend fun exec(context: IPContext) =
     createChain {
-      command(IPCommand.CREATE) {
-        stub { createStubs() }
+      initState("Инициализация состояния")
+
+      command(CREATE, "Создание интеграционного потока") {
+        stubs("Обработка заглушек") {
+          stubCreateBadDescription()
+          stubCreateSuccess()
+        }
       }
-      command(IPCommand.UPDATE) {
-        stub { updateStubs() }
+      command(UPDATE, "Изменение интеграционного потока") {
+        stubs("Обработка заглушек") {
+          stubUpdateBadDescription()
+          stubUpdateSuccess()
+        }
       }
-      command(IPCommand.DELETE) {
-        stub { deleteStubs() }
+      command(DELETE, "Удаление интеграционного потока") {
+        stubs("Обработка заглушек") {
+          stubDeleteBadId()
+          stubDeleteCannot()
+          stubDeleteSuccess()
+        }
       }
-      command(IPCommand.READ) {
-        stub { readStubs() }
+      command(READ, "Чтение информации об интеграционном потоке") {
+        stubs(("Обработка заглушек")) {
+          stubReadNotFound()
+          stubReadBadId()
+          stubReadSuccess()
+        }
       }
-      command(IPCommand.ENABLE) {
-        stub { enableStubs() }
+      command(ENABLE, "Включение интеграционного потока") {
+        stubs(("Обработка заглушек")) {
+          stubEnableBadId()
+          stubEnableSuccess()
+        }
       }
-      command(IPCommand.DISABLE) {
-        stub { disableStubs() }
+      command(DISABLE, "Отключение интеграционного потока") {
+        stubs("Обработка заглушек") {
+          stubDisableBadId()
+          stubDisableSuccess()
+        }
       }
-      command(IPCommand.SEARCH) {
-        stub { searchStubs() }
+      command(SEARCH, "Поиск интеграционных потоков") {
+        stubs("Обработка заглушек") {
+          stubSearchBadString()
+          stubSearchSuccess()
+        }
       }
-      command(IPCommand.ACCESSIBLE) {
-        stub { searchAccessible() }
+      command(ACCESSIBLE, "Доступные интеграционные потоки") {
+        stubs("Обработка заглушек") {
+          stubAccessibleSuccess()
+        }
       }
     }.exec(context)
-
 }
 
 
