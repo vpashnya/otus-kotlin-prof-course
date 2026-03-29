@@ -21,11 +21,13 @@ fun DslPerformerChain<IPContext>.validation(title: String, func: DslPerformerCha
 
     performer {
       mainF {
-        streamRequestValidating = streamRequest
+        streamRequestValidating = streamRequest.copy()
         streamRequestValidating.classShortName = streamRequestValidating.classShortName.trim().uppercase()
         streamRequestValidating.methodShortName = streamRequestValidating.methodShortName.trim().uppercase()
         streamRequestValidating.description = streamRequestValidating.description.trim()
-        streamFilterRequestValidating = streamFilterRequest
+        streamRequestValidating.transportParams = streamRequestValidating.transportParams.trim()
+
+        streamFilterRequestValidating = streamFilterRequest.copy()
         streamFilterRequestValidating.classShortName = streamFilterRequestValidating.classShortName.trim().uppercase()
         streamFilterRequestValidating.methodShortName = streamFilterRequestValidating.methodShortName.trim().uppercase()
         streamFilterRequestValidating.searchString = streamFilterRequestValidating.searchString.trim()
@@ -36,8 +38,8 @@ fun DslPerformerChain<IPContext>.validation(title: String, func: DslPerformerCha
 
     performer {
       mainF {
-        streamRequestValidated = streamRequestValidating
-        streamFilterRequestValidated = streamFilterRequestValidating
+        streamRequestValidated = streamRequestValidating.copy()
+        streamFilterRequestValidated = streamFilterRequestValidating.copy()
       }
     }
 

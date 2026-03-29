@@ -384,17 +384,17 @@ class StubsTests {
 
   @ParameterizedTest
   @EnumSource
-  fun stubTest(stub: StubsCases) = runTest {
+  fun stubTest(stubCase: StubsCases) = runTest {
     createChain {
       initState("Инициализация состояния")
-      command(stub.contextOriginal.command, "") {
+      command(stubCase.contextOriginal.command, "") {
         stubs("Заглушки") {
-          stub.stubFunction.also { it() }
+          stubCase.stubFunction.also { it() }
         }
       }
-    }.exec(stub.contextOriginal)
+    }.exec(stubCase.contextOriginal)
 
-    assertEquals(stub.contextExpect, stub.contextOriginal)
+    assertEquals(stubCase.contextExpect, stubCase.contextOriginal)
   }
 
 }

@@ -8,11 +8,11 @@ data class IPStream(
   var transportParams: String = "",
   var active: Boolean = false,
 ) {
-  fun isEmpty() = this == NONE
-
   companion object {
     private val NONE = IPStream()
   }
+
+  fun isEmpty() = this == NONE
 }
 
 
