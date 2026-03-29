@@ -24,6 +24,12 @@ data class IPContext(
   var streamRequest: IPStream = IPStream(),
   var streamFilterRequest: IPStreamFilter = IPStreamFilter(),
 
+  var streamRequestValidating: IPStream = IPStream(),
+  var streamFilterRequestValidating: IPStreamFilter = IPStreamFilter(),
+
+  var streamRequestValidated: IPStream = IPStream(),
+  var streamFilterRequestValidated: IPStreamFilter = IPStreamFilter(),
+
   var streamResponse: IPStream = IPStream(),
   var streamsResponse: MutableList<IPStream> = mutableListOf(),
 

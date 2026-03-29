@@ -9,10 +9,14 @@ import ru.pvn.learning.IPContext
 val LOG_CHAIN = LoggerFactory.getLogger("chain.exec")
 
 @CorDslMarker
+fun IPContext.log(level: Level, message: IPContext.() -> String) =
+  LOG_CHAIN.atLevel(level).log(message())
+
+@CorDslMarker
 fun DslPerformerChain<IPContext>.log(level: Level, message: IPContext.() -> String) =
   performer {
     mainF {
-      LOG_CHAIN.atLevel(level).log(message())
+      log(level) { message() }
     }
   }
 
