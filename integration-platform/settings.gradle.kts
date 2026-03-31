@@ -23,3 +23,5 @@ include(":integration-platform-api-v1-mappers")
 include(":integration-platform-app-ktor")
 include(":integration-platform-app-kafka")
 include(":integration-platform-business-logic")
+include(":integration-platform-lib-cor")
+
