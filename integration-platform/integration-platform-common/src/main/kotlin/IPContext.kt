@@ -10,8 +10,11 @@ import kotlinx.datetime.Instant
 import ru.pvn.learning.models.IPExternalSystemId
 import ru.pvn.learning.models.IPStream
 import ru.pvn.learning.models.IPStreamFilter
+import ru.pvn.learning.repo.IRepoStream
 
 data class IPContext(
+  val repository: IRepoStream? = null,
+
   var command: IPCommand = IPCommand.NONE,
   var state: IPState = IPState.NONE,
   val errors: MutableList<IPError> = mutableListOf(),
@@ -33,7 +36,7 @@ data class IPContext(
   var streamResponse: IPStream = IPStream(),
   var streamsResponse: MutableList<IPStream> = mutableListOf(),
 
-  var requesterExternalSystemId: IPExternalSystemId = IPExternalSystemId.NONE
+  var requesterExternalSystemId: IPExternalSystemId = IPExternalSystemId.NONE,
 )
 
 

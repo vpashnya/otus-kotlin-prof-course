@@ -24,4 +24,5 @@ include(":integration-platform-app-ktor")
 include(":integration-platform-app-kafka")
 include(":integration-platform-business-logic")
 include(":integration-platform-lib-cor")
+include(":integration-platform-repo-inmemory")
 
