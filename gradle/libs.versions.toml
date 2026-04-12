@@ -10,8 +10,6 @@ ktor = "3.4.0"
 logback = "1.4.14"
 coroutines = "1.9.0"
 kafka-clients = "3.7.0"
-ignite = "3.1.0"
-
 
 # BASE
 jvm-compiler = "17"
@@ -53,10 +51,6 @@ ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref 
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 kafka-client = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka-clients" }
-
-ignite-core = { module = "org.apache.ignite:ignite-core", version.ref = "ignite" }
-ignite-api = { module = "org.apache.ignite:ignite-api", version.ref = "ignite" }
-ignite-runner = { module = "org.apache.ignite:ignite-runner", version.ref = "ignite" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

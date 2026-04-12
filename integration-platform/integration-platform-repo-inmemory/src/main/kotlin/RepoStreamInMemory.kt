@@ -14,43 +14,15 @@ import java.util.concurrent.atomic.AtomicInteger
 class RepoStreamInMemory : IRepoStream {
   private val seqId = AtomicInteger(0)
 
-  private val createStreamTable = """
-    create table if not exists streams 
-      (
-        id int primary key, 
-        description varchar,
-        classShortName varchar,
-        methodShortName varchar,
-        transportParams varchar,
-        active int
-      )
-  """
-
-  private val clearStreamTable = """
-    delete from streams
-  """
-
   private val storage: InMemoryStorage
 
   constructor(storage: InMemoryStorage) {
-    storage.getSqlApi().sql().execute(null, createStreamTable)
-    storage.getSqlApi().sql().execute(null, clearStreamTable)
 
     this.storage = storage
   }
 
   override suspend fun createStream(stream: RepoIPStreamRequest): RepoIPStreamResponse {
-    val id = seqId.incrementAndGet()
-    stream.stream.run {
-      storage.getSqlApi().sql().execute(
-        null,
-        " INSERT INTO STREAMS (id, description, classShortName, methodShortName, transportParams, active) VALUES (?, ?, ?, ?, ?, ?)",
-        id, description, classShortName, methodShortName, transportParams, if (active) 1 else 0
-      )
-    }
-
-    return RepoIPStreamResponseOk(stream = IPStream())
-
+    TODO("Not yet implemented")
   }
 
   override suspend fun readStream(streamId: RepoIPStreamIdRequest): RepoIPStreamResponse {
