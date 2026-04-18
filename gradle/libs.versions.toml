@@ -10,6 +10,7 @@ ktor = "3.4.0"
 logback = "1.4.14"
 coroutines = "1.9.0"
 kafka-clients = "3.7.0"
+sqldelight = "2.3.2"
 
 # BASE
 jvm-compiler = "17"
@@ -52,6 +53,8 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 
 kafka-client = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka-clients" }
 
+sqldelight-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -59,3 +62,4 @@ openapi-generator = { id = "org.openapi.generator", version.ref = "openapi-gener
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+sqldelight-pl = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

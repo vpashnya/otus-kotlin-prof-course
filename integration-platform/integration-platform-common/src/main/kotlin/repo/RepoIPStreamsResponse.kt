@@ -6,7 +6,7 @@ import ru.pvn.learning.models.IPStream
 interface RepoIPStreamsResponse
 
 data class RepoIPStreamsResponseOk(
-  val stream: List<IPStream>,
+  val streams: List<IPStream>,
 ) : RepoIPStreamsResponse
 
 data class RepoIPStreamsResponseFail(

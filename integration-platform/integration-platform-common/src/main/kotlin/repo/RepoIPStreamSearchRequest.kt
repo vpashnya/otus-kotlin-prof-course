@@ -1,5 +1,7 @@
 package ru.pvn.learning.repo
 
 data class RepoIPStreamSearchRequest(
-  val searchString : String
+  val classNameLike : String?,
+  val methodNameLike : String?,
+  val active: Boolean?
 )
