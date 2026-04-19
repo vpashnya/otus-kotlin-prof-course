@@ -1,10 +1,10 @@
 ## Сборка проекта
 `docker build . -t app-ktor`
 ## Запуск проекта
-`docker compose -f docker-compose.yaml up -d app-kafka`
+`docker compose -f docker-compose.yaml up -d app-ktor`
 
 # Параметры среды (пример)
-MODE=STUB
+MODE=TEST
 
 # Запросы (примеры)
 

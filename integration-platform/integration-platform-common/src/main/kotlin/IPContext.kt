@@ -24,17 +24,22 @@ data class IPContext(
 
   var requestId: IPRequestId = IPRequestId.NONE,
   var timeStart: Instant = Instant.NONE,
+
   var streamRequest: IPStream = IPStream(),
   var streamFilterRequest: IPStreamFilter = IPStreamFilter(),
+  var streamResponse: IPStream = IPStream(),
+  var streamsResponse: MutableList<IPStream> = mutableListOf(),
 
   var streamRequestValidating: IPStream = IPStream(),
   var streamFilterRequestValidating: IPStreamFilter = IPStreamFilter(),
-
   var streamRequestValidated: IPStream = IPStream(),
   var streamFilterRequestValidated: IPStreamFilter = IPStreamFilter(),
 
-  var streamResponse: IPStream = IPStream(),
-  var streamsResponse: MutableList<IPStream> = mutableListOf(),
+  var streamRepo: IRepoStream = IRepoStream.NONE,
+  var streamRequestToRepo: IPStream = IPStream(),
+  var streamFilterRequestToRepo: IPStreamFilter = IPStreamFilter(),
+  var streamResponseFromRepo: IPStream = IPStream(),
+  var streamsResponseFromRepo: MutableList<IPStream> = mutableListOf(),
 
   var requesterExternalSystemId: IPExternalSystemId = IPExternalSystemId.NONE,
 )

@@ -1,7 +1,16 @@
 import ru.pvn.integration.platform.business.dsl.command
 import ru.pvn.integration.platform.business.dsl.initState
+import ru.pvn.integration.platform.business.dsl.repoProcess
 import ru.pvn.integration.platform.business.dsl.stubs
 import ru.pvn.integration.platform.business.dsl.validation
+import ru.pvn.integration.platform.business.repo.accessibleInRepo
+import ru.pvn.integration.platform.business.repo.createInRepo
+import ru.pvn.integration.platform.business.repo.deleteInRepo
+import ru.pvn.integration.platform.business.repo.disableInRepo
+import ru.pvn.integration.platform.business.repo.enableInRepo
+import ru.pvn.integration.platform.business.repo.readInRepo
+import ru.pvn.integration.platform.business.repo.searchInRepo
+import ru.pvn.integration.platform.business.repo.updateInRepo
 import ru.pvn.integration.platform.business.stubs.*
 import ru.pvn.integration.platform.business.validation.validateClassNameFilled
 import ru.pvn.integration.platform.business.validation.validateMethodDescriptionFilled
@@ -29,6 +38,9 @@ class IPStreamProcessor {
           validateMethodDescriptionFilled()
           validateTransportParamsFilled()
         }
+        repoProcess("Сохранение нового объекта в БД"){
+          createInRepo()
+        }
       }
       command(UPDATE, "Изменение интеграционного потока") {
         stubs("Обработка заглушек") {
@@ -41,6 +53,9 @@ class IPStreamProcessor {
           validateMethodDescriptionFilled()
           validateTransportParamsFilled()
         }
+        repoProcess("Изменение объекта в БД"){
+          updateInRepo()
+        }
       }
       command(DELETE, "Удаление интеграционного потока") {
         stubs("Обработка заглушек") {
@@ -50,6 +65,9 @@ class IPStreamProcessor {
         }
         validation("Валидация") {
           validateStreamId()
+        }
+        repoProcess("Удаление объекта в БД"){
+          deleteInRepo()
         }
       }
       command(READ, "Чтение информации об интеграционном потоке") {
@@ -61,6 +79,9 @@ class IPStreamProcessor {
         validation("Валидация") {
           validateStreamId()
         }
+        repoProcess("Получение объекта из БД"){
+          readInRepo()
+        }
       }
       command(ENABLE, "Включение интеграционного потока") {
         stubs(("Обработка заглушек")) {
@@ -70,7 +91,9 @@ class IPStreamProcessor {
         validation("Валидация") {
           validateStreamId()
         }
-
+        repoProcess("Изменение объекта в БД"){
+          enableInRepo()
+        }
       }
       command(DISABLE, "Отключение интеграционного потока") {
         stubs("Обработка заглушек") {
@@ -79,6 +102,9 @@ class IPStreamProcessor {
         }
         validation("Валидация") {
           validateStreamId()
+        }
+        repoProcess("Изменение объекта в БД"){
+          disableInRepo()
         }
       }
       command(SEARCH, "Поиск интеграционных потоков") {
@@ -89,10 +115,16 @@ class IPStreamProcessor {
         validation("Валидация") {
           validateNecessaryFieldsFilled()
         }
+        repoProcess("Получение объектов из БД"){
+          searchInRepo()
+        }
       }
       command(ACCESSIBLE, "Доступные интеграционные потоки") {
         stubs("Обработка заглушек") {
           stubAccessibleSuccess()
+        }
+        repoProcess("Получение объектов из БД"){
+          accessibleInRepo()
         }
       }
     }.exec(context)

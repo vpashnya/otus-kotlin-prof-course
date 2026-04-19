@@ -6,4 +6,4 @@ services:
     ports:
       - "8888:8080"
     environment:
-      MODE: "STUB"
+      MODE: "TEST"

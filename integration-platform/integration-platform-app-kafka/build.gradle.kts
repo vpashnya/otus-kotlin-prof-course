@@ -15,6 +15,7 @@ dependencies {
   implementation(project(":integration-platform-api-v1"))
   implementation(project(":integration-platform-api-v1-mappers"))
   implementation(project(":integration-platform-business-logic"))
+  implementation(project(":integration-platform-repo-inmemory"))
 
   testRuntimeOnly(libs.jupiter.engine)
   testImplementation(libs.jupiter.params)
