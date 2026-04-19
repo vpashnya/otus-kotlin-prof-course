@@ -1,42 +1,44 @@
-import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Test
 import ru.pvn.integration.platform.repo.inmemory.RepoStreamInMemory
-import ru.pvn.learning.models.IPStream
-import ru.pvn.learning.models.IPStreamId
-import ru.pvn.learning.repo.RepoIPStreamRequest
+import ru.pvn.learning.IPStreamAccessibleTest
+import ru.pvn.learning.IPStreamCreateTest
+import ru.pvn.learning.IPStreamDeleteTest
+import ru.pvn.learning.IPStreamDisableTest
+import ru.pvn.learning.IPStreamEnableTest
+import ru.pvn.learning.IPStreamReadTest
+import ru.pvn.learning.IPStreamSearchTest
+import ru.pvn.learning.IPStreamUpdateTest
+import ru.pvn.learning.repo.IRepoStream
 
-class RepoStreamInMemoryTests {
-  companion object {
-    val storage: InMemoryStorage by lazy { InMemoryStorage() }
-    val repoStreamInMemory: RepoStreamInMemory by lazy { RepoStreamInMemory(storage) }
-  }
+val inMemoryRepo: IRepoStream = RepoStreamInMemory()
 
-  @Test
-  fun createTest() = runTest {
-    repoStreamInMemory.createStream(
-      RepoIPStreamRequest(stream = IPStream(IPStreamId.NONE, "description", "classShorName"))
-    )
-  }
+class IPStreamCreateInMemoryTest : IPStreamCreateTest() {
+  override val repo: IRepoStream = inMemoryRepo
+}
 
-  @Test
-  fun updateTest() = runTest {
-    repoStreamInMemory.createStream(
-      RepoIPStreamRequest(stream = IPStream(IPStreamId.NONE, "description", "classShorName"))
-    )
-  }
+class IPStreamUpdateInMemoryTest : IPStreamUpdateTest() {
+  override val repo: IRepoStream = inMemoryRepo
+}
 
-  @Test
-  fun readTest() = runTest {
-    repoStreamInMemory.createStream(
-      RepoIPStreamRequest(stream = IPStream(IPStreamId.NONE, "description", "classShorName"))
-    )
-  }
+class IPStreamReadInMemoryTest : IPStreamReadTest() {
+  override val repo: IRepoStream = inMemoryRepo
+}
 
-  @Test
-  fun deleteTest() = runTest {
-    repoStreamInMemory.createStream(
-      RepoIPStreamRequest(stream = IPStream(IPStreamId.NONE, "description", "classShorName"))
-    )
-  }
+class IPStreamDeleteInMemoryTest : IPStreamDeleteTest() {
+  override val repo: IRepoStream = inMemoryRepo
+}
 
+class IPStreamEnableInMemoryTest : IPStreamEnableTest() {
+  override val repo: IRepoStream = inMemoryRepo
+}
+
+class IPStreamDisableInMemoryTest : IPStreamDisableTest() {
+  override val repo: IRepoStream = inMemoryRepo
+}
+
+class IPStreamAccessibleInMemoryTest : IPStreamAccessibleTest() {
+  override val repo: IRepoStream = inMemoryRepo
+}
+
+class IPStreamSearchInMemoryTest : IPStreamSearchTest() {
+  override val repo: IRepoStream = inMemoryRepo
 }

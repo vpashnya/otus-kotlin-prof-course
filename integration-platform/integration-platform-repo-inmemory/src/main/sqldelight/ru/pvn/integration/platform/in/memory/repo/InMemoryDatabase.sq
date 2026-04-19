@@ -53,7 +53,7 @@ SELECT *
 FROM ip_stream
 WHERE classShortName LIKE :classShortName
 AND methodShortName LIKE :methodShortName
-AND active LIKE :active;
+AND description LIKE :description;
 
 getIPStreamVersion:
 SELECT version

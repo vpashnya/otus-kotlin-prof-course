@@ -9,6 +9,7 @@ version = rootProject.version
 
 dependencies {
   implementation(project(":integration-platform-common"))
+  implementation(project(":integration-platform-repo-tests"))
   implementation(libs.logback.classic)
   implementation(libs.coroutines.test)
   implementation(libs.sqldelight.driver)

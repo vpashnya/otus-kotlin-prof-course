@@ -9,6 +9,6 @@ data class RepoIPStreamsResponseOk(
   val streams: List<IPStream>,
 ) : RepoIPStreamsResponse
 
-data class RepoIPStreamsResponseFail(
+data class RepoIPStreamsResponseError(
   val errors: List<IPError>,
 ) : RepoIPStreamsResponse
