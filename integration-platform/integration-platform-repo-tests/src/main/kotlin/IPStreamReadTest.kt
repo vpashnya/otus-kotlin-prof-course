@@ -39,10 +39,10 @@ abstract class IPStreamReadTest {
 
   @Test
   fun readNotFoundTest() = runTest {
-    val updateResult = repo.readStream(RepoIPStreamIdRequest(IPStreamId("111")))
+    val readResult = repo.readStream(RepoIPStreamIdRequest(IPStreamId("-111")))
 
-    assertIs<RepoIPStreamResponseError>(updateResult)
-    assertNotNull(updateResult.errors.find { it.code == "555" })
+    assertIs<RepoIPStreamResponseError>(readResult)
+    assertNotNull(readResult.errors.find { it.code == "555" })
   }
 
 }

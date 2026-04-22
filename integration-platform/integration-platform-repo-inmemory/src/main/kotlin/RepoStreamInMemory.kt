@@ -142,7 +142,7 @@ class RepoStreamInMemory(
       )
     )
 
-  private fun Exception.buildRepoIPStreamResponseError(code: String, message: String) =
+private fun Exception.buildRepoIPStreamResponseError(code: String, message: String) =
     RepoIPStreamResponseError(
       errors = listOf(
         IPError(

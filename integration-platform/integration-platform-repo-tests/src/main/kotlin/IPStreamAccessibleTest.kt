@@ -5,7 +5,9 @@ import ru.pvn.learning.repo.IRepoStream
 import ru.pvn.learning.repo.RepoIPStreamRequest
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
+import ru.pvn.learning.repo.RepoIPStreamIdRequest
 import ru.pvn.learning.repo.RepoIPStreamResponseOk
+import ru.pvn.learning.repo.RepoIPStreamSearchRequest
 import ru.pvn.learning.repo.RepoIPStreamsResponseOk
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -27,6 +29,10 @@ abstract class IPStreamAccessibleTest {
 
   @Test
   fun accessibleOkTest() = runTest {
+    (repo.searchStreams(RepoIPStreamSearchRequest()) as RepoIPStreamsResponseOk).streams.forEach { it ->
+      repo.deleteStream(RepoIPStreamIdRequest(it.id))
+    }
+
     val expect = listOf(ipStreamFirst, ipStreamSecond, ipStreamThird).map {
       (repo.createStream(RepoIPStreamRequest(it)) as RepoIPStreamResponseOk).stream
     }

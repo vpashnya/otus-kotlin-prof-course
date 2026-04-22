@@ -9,36 +9,35 @@ import ru.pvn.learning.IPStreamSearchTest
 import ru.pvn.learning.IPStreamUpdateTest
 import ru.pvn.learning.repo.IRepoStream
 
-val inMemoryRepo: IRepoStream = RepoStreamInMemory()
 
 class IPStreamCreateInMemoryTest : IPStreamCreateTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }
 
 class IPStreamUpdateInMemoryTest : IPStreamUpdateTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }
 
 class IPStreamReadInMemoryTest : IPStreamReadTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }
 
 class IPStreamDeleteInMemoryTest : IPStreamDeleteTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }
 
 class IPStreamEnableInMemoryTest : IPStreamEnableTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }
 
 class IPStreamDisableInMemoryTest : IPStreamDisableTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }
 
 class IPStreamAccessibleInMemoryTest : IPStreamAccessibleTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }
 
 class IPStreamSearchInMemoryTest : IPStreamSearchTest() {
-  override val repo: IRepoStream = inMemoryRepo
+  override val repo: IRepoStream = RepoStreamInMemory()
 }

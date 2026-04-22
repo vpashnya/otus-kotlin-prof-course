@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: pashnyavn
+      changes:
+        - createTable:
+            tableName: ip_stream
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(4000)
+              - column:
+                  name: class_short_name
+                  type: varchar(20)
+              - column:
+                  name: method_short_name
+                  type: varchar(20)
+              - column:
+                  name: transport_params
+                  type: varchar(200)
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValue: 1

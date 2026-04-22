@@ -34,7 +34,7 @@ abstract class IPStreamDeleteTest {
 
   @Test
   fun deleteFailTest() = runTest {
-    val deleteResult = repo.deleteStream(RepoIPStreamIdRequest(IPStreamId("1")))
+    val deleteResult = repo.deleteStream(RepoIPStreamIdRequest(IPStreamId("-111")))
     assertIs<RepoIPStreamResponseError>(deleteResult)
     deleteResult.errors.find { it.code == "555" }
   }
