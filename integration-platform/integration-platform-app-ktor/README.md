@@ -4,7 +4,10 @@
 `docker compose -f docker-compose.yaml up -d app-ktor`
 
 # Параметры среды (пример)
-MODE=TEST
+MODE=PROD
+PG_URL=jdbc:postgresql://localhost:5432/mydatabase
+PG_USER=myuser
+PG_PASSWORD=mypassword
 
 # Запросы (примеры)
 

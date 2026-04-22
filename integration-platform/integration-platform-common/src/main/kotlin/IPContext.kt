@@ -13,7 +13,6 @@ import ru.pvn.learning.models.IPStreamFilter
 import ru.pvn.learning.repo.IRepoStream
 
 data class IPContext(
-  val repository: IRepoStream? = null,
 
   var command: IPCommand = IPCommand.NONE,
   var state: IPState = IPState.NONE,
