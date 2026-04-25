@@ -4,11 +4,14 @@
 `docker compose -f docker-compose.yaml up -d app-kafka`
 
 # Параметры среды (пример)
-MODE=STUB
+MODE=PROD
 KAFKA_HOSTS="127.0.0.1:9092"
 KAFKA_GROUP_ID="integration-platform"
 KAFKA_IP_STREAM_TOPIC_V1_IN="ip.stream.v1.in"
 KAFKA_IP_STREAM_TOPIC_V1_OUT="ip.stream.v1.out"
+PG_URL=jdbc:postgresql://localhost:5432/mydatabase
+PG_USER=myuser
+PG_PASSWORD=mypassword
 
 # Запросы (примеры)
 

@@ -10,8 +10,10 @@ import kotlinx.datetime.Instant
 import ru.pvn.learning.models.IPExternalSystemId
 import ru.pvn.learning.models.IPStream
 import ru.pvn.learning.models.IPStreamFilter
+import ru.pvn.learning.repo.IRepoStream
 
 data class IPContext(
+
   var command: IPCommand = IPCommand.NONE,
   var state: IPState = IPState.NONE,
   val errors: MutableList<IPError> = mutableListOf(),
@@ -21,19 +23,24 @@ data class IPContext(
 
   var requestId: IPRequestId = IPRequestId.NONE,
   var timeStart: Instant = Instant.NONE,
+
   var streamRequest: IPStream = IPStream(),
   var streamFilterRequest: IPStreamFilter = IPStreamFilter(),
-
-  var streamRequestValidating: IPStream = IPStream(),
-  var streamFilterRequestValidating: IPStreamFilter = IPStreamFilter(),
-
-  var streamRequestValidated: IPStream = IPStream(),
-  var streamFilterRequestValidated: IPStreamFilter = IPStreamFilter(),
-
   var streamResponse: IPStream = IPStream(),
   var streamsResponse: MutableList<IPStream> = mutableListOf(),
 
-  var requesterExternalSystemId: IPExternalSystemId = IPExternalSystemId.NONE
+  var streamRequestValidating: IPStream = IPStream(),
+  var streamFilterRequestValidating: IPStreamFilter = IPStreamFilter(),
+  var streamRequestValidated: IPStream = IPStream(),
+  var streamFilterRequestValidated: IPStreamFilter = IPStreamFilter(),
+
+  var streamRepo: IRepoStream = IRepoStream.NONE,
+  var streamRequestToRepo: IPStream = IPStream(),
+  var streamFilterRequestToRepo: IPStreamFilter = IPStreamFilter(),
+  var streamResponseFromRepo: IPStream = IPStream(),
+  var streamsResponseFromRepo: MutableList<IPStream> = mutableListOf(),
+
+  var requesterExternalSystemId: IPExternalSystemId = IPExternalSystemId.NONE,
 )
 
 

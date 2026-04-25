@@ -22,6 +22,7 @@ suspend fun processV1(
   logger: Logger = LOG,
 ): String {
   val context = IPContext(
+    streamRepo = applicationSettings.ipStreamRepo,
     workMode = when (applicationSettings.mode) {
       Mode.PROD -> IPWorkMode.PROD
       Mode.STUB -> IPWorkMode.STUB

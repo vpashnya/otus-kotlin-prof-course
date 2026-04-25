@@ -1,0 +1,69 @@
+import kotlin.Boolean;
+
+CREATE TABLE ip_stream (
+    id INTEGER NOT NULL,
+    description TEXT,
+    classShortName TEXT,
+    methodShortName TEXT,
+    transportParams TEXT,
+    active INTEGER AS Boolean DEFAULT 0,
+    version INTEGER AS LOCK DEFAULT 1
+);
+
+insertIpStream:
+INSERT INTO ip_stream(id, description, classShortName, methodShortName, transportParams)
+VALUES(?, ?, ?, ? ,?);
+
+updateIPStream:
+UPDATE ip_stream
+SET description = :description,
+    classShortName = :classShortName,
+    methodShortName = :methodShortName,
+    transportParams = :transportParams,
+    active = :active,
+    version = :version + 1
+WHERE id = :id
+  AND version = :version;
+
+enableIPStream:
+UPDATE ip_stream
+SET active = 1,
+  version = :version + 1
+WHERE id = :id
+AND version = :version;
+
+disableIPStream:
+UPDATE ip_stream
+SET active = 0,
+  version = :version + 1
+WHERE id = :id
+AND version = :version;
+
+selectAllIpStreams:
+SELECT *
+FROM ip_stream;
+
+selectIPStream:
+SELECT *
+FROM ip_stream
+WHERE id = :id;
+
+selectLikeIPStreams:
+SELECT *
+FROM ip_stream
+WHERE classShortName LIKE :classShortName
+AND methodShortName LIKE :methodShortName
+AND description LIKE :description;
+
+getIPStreamVersion:
+SELECT version
+FROM ip_stream
+WHERE id = :id;
+
+deleteIPStream:
+DELETE
+FROM ip_stream
+WHERE id = :id;
+
+removeAllIpStreams:
+DELETE FROM ip_stream;

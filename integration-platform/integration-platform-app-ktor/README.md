@@ -1,10 +1,13 @@
 ## Сборка проекта
 `docker build . -t app-ktor`
 ## Запуск проекта
-`docker compose -f docker-compose.yaml up -d app-kafka`
+`docker compose -f docker-compose.yaml up -d app-ktor`
 
 # Параметры среды (пример)
-MODE=STUB
+MODE=PROD
+PG_URL=jdbc:postgresql://localhost:5432/mydatabase
+PG_USER=myuser
+PG_PASSWORD=mypassword
 
 # Запросы (примеры)
 

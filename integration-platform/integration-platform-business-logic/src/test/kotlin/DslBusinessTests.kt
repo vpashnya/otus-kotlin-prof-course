@@ -1,7 +1,9 @@
 import kotlinx.coroutines.test.runTest
+
 import ru.pvn.integration.platform.business.dsl.stubs
 import ru.pvn.integration.platform.business.dsl.command
 import ru.pvn.integration.platform.business.dsl.initState
+import ru.pvn.integration.platform.business.dsl.repoProcess
 import ru.pvn.integration.platform.business.dsl.validation
 import ru.pvn.integration.platform.lib.cor.dsl.createChain
 import ru.pvn.learning.IPContext
@@ -118,6 +120,36 @@ class DslBusinessTests {
     assertEquals(context.streamRequestValidated, streamEmpty)
     assertEquals(context.streamFilterRequestValidating, searchFilterEmpty)
     assertEquals(context.streamFilterRequestValidated, searchFilterEmpty)
+  }
+
+  @Test
+  fun dslRepoProcessPositiveTest() = runTest {
+    val stream = IPStream(id = IPStreamId("1"), description = "Test description", classShortName = "SHORT_NAME", methodShortName = "SHORT_NAME", transportParams = "{}")
+    val searchFilter = IPStreamFilter(searchString = "some search string", classShortName = "SOME_CLASS", methodShortName = "SOME_METHOD")
+    val context = IPContext(command = CREATE, workMode = IPWorkMode.TEST, state = RUNNING, streamRequest = stream, streamFilterRequest = searchFilter)
+    createChain {
+      command(CREATE, "Тестовая команда") {
+        repoProcess("работа с репозиторием") {}
+      }
+    }.exec(context)
+    assertEquals(context.streamRequestToRepo, stream)
+    assertEquals(context.streamFilterRequestToRepo, searchFilter)
+  }
+
+  @Test
+  fun dslRepoProcessNegativeTest() = runTest {
+    val stream = IPStream(id = IPStreamId("1"), description = "Test description", classShortName = "SHORT_NAME", methodShortName = "SHORT_NAME", transportParams = "{}")
+    val searchFilter = IPStreamFilter(searchString = "some search string", classShortName = "SOME_CLASS", methodShortName = "SOME_METHOD")
+    val context = IPContext(command = CREATE, workMode = IPWorkMode.STUB, state = RUNNING, streamRequest = stream, streamFilterRequest = searchFilter)
+    val streamEmpty = IPStream()
+    val searchFilterEmpty = IPStreamFilter()
+    createChain {
+      command(CREATE, "Тестовая команда") {
+        repoProcess("работа с репозиторием") {}
+      }
+    }.exec(context)
+    assertEquals(context.streamRequestToRepo, streamEmpty)
+    assertEquals(context.streamFilterRequestToRepo, searchFilterEmpty)
   }
 
 }

@@ -38,6 +38,7 @@ suspend inline fun <reified Q : IRequest, reified R : IResponse> ApplicationCall
   logger: Logger,
 ) {
   val context = IPContext(
+    streamRepo = applicationSettings.ipStreamRepo,
     workMode = when (applicationSettings.mode) {
       Mode.PROD -> IPWorkMode.PROD
       Mode.STUB -> IPWorkMode.STUB
