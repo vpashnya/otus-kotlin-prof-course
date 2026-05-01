@@ -1,5 +1,7 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlinx.serialization)
+  alias(libs.plugins.sqldelight.pl)
 }
 
 group = rootProject.group
@@ -17,6 +19,12 @@ dependencies {
   implementation(project(":integration-platform-business-logic"))
   implementation(project(":integration-platform-repo-inmemory"))
   implementation(project(":integration-platform-repo-pg"))
+  implementation(libs.postgresql.lib)
+  implementation(libs.liquibase.lib)
+  implementation(libs.exposed.core)
+  implementation(libs.exposed.jdbc)
+  implementation(libs.exposed.dao)
+  implementation(libs.sqldelight.driver)
 
   testRuntimeOnly(libs.jupiter.engine)
   testImplementation(libs.jupiter.params)

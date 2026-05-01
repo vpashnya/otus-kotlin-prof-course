@@ -36,7 +36,11 @@ Integration Platform - интеграционная платформа для б
 6. [integration-platform-business-logic](integration-platform/integration-platform-business-logic) - Бизнес логика
 7. [integration-platform-app-ktor](integration-platform/integration-platform-app-ktor) - Веб приложение на ktor 
 8. [integration-platform-app-kafka](integration-platform/integration-platform-app-kafka) - Транспортное приложение для kafka
-
+9. [integration-platform-lib-cor](integration-platform/integration-platform-lib-cor) - Модуль с функциональностью "Цепочка ответственности"
+10. [integration-platform-repo-tests](integration-platform/integration-platform-repo-tests) - Модуль с интеграционными тестами репозитория
+11. [integration-platform-repo-inmemory](integration-platform/integration-platform-repo-inmemory) - Inmemory репозиторий на sqldelight
+12. [integration-platform-repo-pg](integration-platform/integration-platform-repo-pg) - Persistent репозиторий на pgsql
+ 
 ## Gradle плагины
 1. Модуль 2: Расширенные возможности Kotlin<br>
    1. [BuildPluginJvm.kt](build-plugin/src/main/kotlin/BuildPluginJvm.kt) - Плагин для сборки проектов JVM

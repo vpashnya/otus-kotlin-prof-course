@@ -1,3 +1,4 @@
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -29,7 +30,7 @@ class ChainTests {
 
   @ParameterizedTest
   @EnumSource
-  fun performerSingleTest(case: PerformerSingleCases) {
+  fun performerSingleTest(case: PerformerSingleCases) = runTest {
     val context = TestContext()
 
     PerformerSingle(
@@ -40,7 +41,7 @@ class ChainTests {
   }
 
   @Test
-  fun performerChainTest() {
+  fun performerChainTest() = runTest{
     val context = TestContext()
 
     PerformerChain<TestContext>(
@@ -56,7 +57,7 @@ class ChainTests {
   }
 
   @Test
-  fun dslChainTest() {
+  fun dslChainTest() = runTest {
     val context = TestContext()
 
     val chain =

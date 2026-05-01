@@ -1,5 +1,19 @@
 version: "0.1"
 services:
+
+  app-ktor:
+    image: app-ktor:latest
+    ports:
+      - "8888:8080"
+    environment:
+      MODE: "PROD"
+      PG_URL: "jdbc:postgresql://pgdb:5432/mydatabase"
+      PG_USER: "myuser"
+      PG_PASSWORD: "mypassword"
+    depends_on:
+      pgdb:
+        condition: service_healthy
+
   app-kafka:
     image: app-kafka:latest
     depends_on:
@@ -7,15 +21,17 @@ services:
         condition: service_started
       kafdrop:
         condition: service_started
+      pgdb:
+        condition: service_healthy
     environment:
-      MODE: "TEST"
+      MODE: "PROD"
       KAFKA_HOSTS: "kafka1:29092"
       KAFKA_GROUP_ID: "integration-platform"
       KAFKA_IP_STREAM_TOPIC_V1_IN: "ip.stream.v1.in"
       KAFKA_IP_STREAM_TOPIC_V1_OUT: "ip.stream.v1.out"
-      PG_URL: ""
-      PG_USER: ""
-      PG_PASSWORD: ""
+      PG_URL: "jdbc:postgresql://pgdb:5432/mydatabase"
+      PG_USER: "myuser"
+      PG_PASSWORD: "mypassword"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.7
@@ -61,3 +77,19 @@ services:
     depends_on:
       - "kafka1"
     restart: "no"
+
+  pgdb:
+    image: postgres:latest
+    container_name: pgdb
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.ktor)
   alias(libs.plugins.kotlin.plugin.serialization)
+  alias(libs.plugins.sqldelight.pl)
 }
 
 group = rootProject.group
@@ -23,6 +24,12 @@ dependencies {
   implementation(libs.ktor.client.core)
   implementation(libs.ktor.client.okhttp)
   implementation(libs.ktor.client.negotiation)
+  implementation(libs.postgresql.lib)
+  implementation(libs.liquibase.lib)
+  implementation(libs.exposed.core)
+  implementation(libs.exposed.jdbc)
+  implementation(libs.exposed.dao)
+  implementation(libs.sqldelight.driver)
 
   implementation(project(":integration-platform-common"))
   implementation(project(":integration-platform-api-v1"))

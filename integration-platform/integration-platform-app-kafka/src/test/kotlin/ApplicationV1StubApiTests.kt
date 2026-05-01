@@ -38,6 +38,7 @@ import ru.pvn.integration.platform.kafka.IPStreamHandler
 import ru.pvn.integration.platform.kafka.createIPStreamTopicPair
 import ru.pvn.integration.platform.kafka.initApplicationSettings
 import java.util.Collections
+import kotlin.String
 import kotlin.test.assertEquals
 
 
@@ -67,6 +68,7 @@ class ApplicationV1StubApiTests {
           methodShortName = "EXPORT2FNS",
           transportParams = "some transport",
           description = "Отправка информации в ФНС",
+          version = "0",
           active = false,
           id = "999"
         )
@@ -86,7 +88,7 @@ class ApplicationV1StubApiTests {
         )
       ),
       response = StreamCreateResponse(
-        stream = StreamResponseObject("", "", "", "", null, false),
+        stream = StreamResponseObject("", "", "", "", "0", null, false),
         result = ResponseResult.ERROR,
         errors = listOf(Error(code = "999", group = "CREATE_ERROR", message = "неверное описание"))
       )
@@ -102,6 +104,7 @@ class ApplicationV1StubApiTests {
           methodShortName = "EXPORT2FNS",
           transportParams = "some transport",
           description = "Отправка информации в ФНС",
+          version = "1",
           id = "12345",
         )
       ),
@@ -113,6 +116,7 @@ class ApplicationV1StubApiTests {
           methodShortName = "EXPORT2FNS",
           transportParams = "some transport",
           description = "Отправка информации в ФНС",
+          version = "1",
           id = "12345",
           active = false
         )
@@ -129,11 +133,12 @@ class ApplicationV1StubApiTests {
           methodShortName = "EXPORT2FNS",
           transportParams = "some transport",
           description = "Отправка информации в ФНС",
+          version = "0",
           id = "12345",
         )
       ),
       response = StreamUpdateResponse(
-        stream = StreamResponseObject("", "", "", "", null, false),
+        stream = StreamResponseObject("", "", "", "", "0", null, false),
         result = ResponseResult.ERROR,
         errors = listOf(Error(code = "999", group = "UPDATE_ERROR", message = "неверное описание"))
       )
@@ -153,6 +158,7 @@ class ApplicationV1StubApiTests {
           classShortName = "SOME_CLASS",
           methodShortName = "SOME_METHOD",
           transportParams = "[1, 2, 3]",
+          version = "0",
           active = false
         ),
         result = ResponseResult.SUCCESS,
@@ -167,7 +173,7 @@ class ApplicationV1StubApiTests {
         )
       ),
       response = StreamDeleteResponse(
-        stream = StreamResponseObject("", "", "", "", null, false),
+        stream = StreamResponseObject("", "", "", "", "0", null, false),
         result = ResponseResult.ERROR,
         errors = listOf(Error(code = "999", group = "DELETE_ERROR", message = "ошибка удаления"))
       )
@@ -186,6 +192,7 @@ class ApplicationV1StubApiTests {
           classShortName = "SOME_CLASS",
           methodShortName = "SOME_METHOD",
           transportParams = "[1, 2, 3]",
+          version = "0",
           active = false
         ),
         result = ResponseResult.SUCCESS,
@@ -200,14 +207,16 @@ class ApplicationV1StubApiTests {
         )
       ),
       response = StreamReadResponse(
-        stream = StreamResponseObject("", "", "", "", null, false),
+        stream = StreamResponseObject("", "", "", "", "0", null, false),
         result = ResponseResult.ERROR,
         errors = listOf(Error(code = "999", group = "READ_ERROR", message = "ошибка чтения"))
       )
     ),
     STREAM_ENABLE_NORMAL(
       request = StreamEnableRequest(
-        streamId = "456", debug = StreamDebug(
+        streamId = "456",
+        version = "0",
+        debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
           stub = StreamRequestDebugStubs.SUCCESS
         )
@@ -219,6 +228,7 @@ class ApplicationV1StubApiTests {
           classShortName = "SOME_CLASS",
           methodShortName = "SOME_METHOD",
           transportParams = "[1, 2, 3]",
+          version = "0",
           active = true
         ),
         result = ResponseResult.SUCCESS,
@@ -226,13 +236,15 @@ class ApplicationV1StubApiTests {
     ),
     STREAM_ENABLE_ERROR(
       request = StreamEnableRequest(
-        streamId = "789", debug = StreamDebug(
+        streamId = "789",
+        version = "0",
+        debug = StreamDebug(
           mode = StreamRequestDebugMode.STUB,
           stub = StreamRequestDebugStubs.BAD_ID
         )
       ),
       response = StreamEnableResponse(
-        stream = StreamResponseObject("", "", "", "", null, false),
+        stream = StreamResponseObject("", "", "", "", "0",null, false),
         result = ResponseResult.ERROR,
         errors = listOf(Error(code = "999", group = "ENABLE_ERROR", message = "ошибка включения"))
       )
@@ -251,6 +263,7 @@ class ApplicationV1StubApiTests {
           classShortName = "SOME_CLASS",
           methodShortName = "SOME_METHOD",
           transportParams = "[1, 2, 3]",
+          version = "0",
           active = false
         ),
         result = ResponseResult.SUCCESS,
@@ -264,7 +277,7 @@ class ApplicationV1StubApiTests {
         )
       ),
       response = StreamDisableResponse(
-        stream = StreamResponseObject("", "", "", "", null, false),
+        stream = StreamResponseObject("", "", "", "", "0", null, false),
         result = ResponseResult.ERROR,
         errors = listOf(Error(code = "999", group = "DISABLE_ERROR", message = "ошибка отключения"))
       )
@@ -290,6 +303,7 @@ class ApplicationV1StubApiTests {
               classShortName = "SOME_CLASS",
               methodShortName = "SOME_METHOD",
               transportParams = "[1, 2, 3]",
+              version = "0",
               active = false
             ), StreamResponseObject(
               id = "2",
@@ -297,6 +311,7 @@ class ApplicationV1StubApiTests {
               classShortName = "SOME_CLASS",
               methodShortName = "SOME_METHOD",
               transportParams = "[1, 2, 3]",
+              version = "0",
               active = false
             )
           ),
@@ -338,6 +353,7 @@ class ApplicationV1StubApiTests {
               classShortName = "SOME_CLASS",
               methodShortName = "SOME_METHOD",
               transportParams = "[1, 2, 3]",
+              version = "0",
               active = false
             ), StreamResponseObject(
               id = "2",
@@ -345,6 +361,7 @@ class ApplicationV1StubApiTests {
               classShortName = "SOME_CLASS",
               methodShortName = "SOME_METHOD",
               transportParams = "[1, 2, 3]",
+              version = "0",
               active = false
             )
           ),
@@ -359,6 +376,9 @@ class ApplicationV1StubApiTests {
     kafkaGroupId = "",
     kafkaIPStreamTopicIn = "test.in",
     kafkaIPStreamTopicOut = "test.out",
+    pgUrl = "",
+    pgUser = "",
+    pgPassword = "",
   )
 
   private val applicationSettings = initApplicationSettings(applicationConfig)

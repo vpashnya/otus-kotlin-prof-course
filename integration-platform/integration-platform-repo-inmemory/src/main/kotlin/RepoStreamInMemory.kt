@@ -24,10 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class RepoStreamInMemory(
   private val seqId: AtomicInteger = AtomicInteger(0),
-  private val db: InMemoryDatabase = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).let { driver ->
-    InMemoryDatabase.Schema.create(driver)
-    InMemoryDatabase(driver)
-  },
+  private val db: InMemoryDatabase = {
+    Class.forName("org.sqlite.JDBC")
+    JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).let { driver ->
+      InMemoryDatabase.Schema.create(driver)
+      InMemoryDatabase(driver)
+    }
+  }(),
 ) : IRepoStream {
   private val queries = db.inMemoryDatabaseQueries
 
