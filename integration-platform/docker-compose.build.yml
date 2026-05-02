@@ -1,0 +1,18 @@
+services:
+#  data-mart-service:
+#    image: ${CORE_DOCKER_REGISTRY}/data-mart-service:latest
+
+  app-ktor:
+    build:
+      context: ./integration-platform-app-ktor
+#      args:
+#        BUILDER_IMG: ${OPENJDK_IMAGE:-bellsoft/liberica-openjdk-alpine:17}
+#        RUNTIME_IMG: ${OPENJRE_IMAGE:-bellsoft/liberica-openjre-alpine:17}
+
+  app-kafka:
+    build:
+      context: ./integration-platform-app-kafka
+#      args:
+#        BUILDER_IMG: ${OPENJDK_IMAGE:-bellsoft/liberica-openjdk-alpine:17}
+#        RUNTIME_IMG: ${OPENJRE_IMAGE:-bellsoft/liberica-openjre-alpine:17}
+

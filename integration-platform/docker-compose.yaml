@@ -2,7 +2,7 @@ version: "0.1"
 services:
 
   app-ktor:
-    image: app-ktor:latest
+    image: integration-platform-app-ktor:latest
     ports:
       - "8888:8080"
     environment:
@@ -19,7 +19,7 @@ services:
         condition: service_healthy
 
   app-kafka:
-    image: app-kafka:latest
+    image: integration-platform-app-kafka:latest
     depends_on:
       kafka1:
         condition: service_started
