@@ -30,6 +30,7 @@ dependencies {
   implementation(libs.exposed.jdbc)
   implementation(libs.exposed.dao)
   implementation(libs.sqldelight.driver)
+  implementation(libs.hikari.cp)
 
   implementation(project(":integration-platform-common"))
   implementation(project(":integration-platform-api-v1"))

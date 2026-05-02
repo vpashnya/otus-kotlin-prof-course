@@ -5,6 +5,10 @@ data class ApplicationConfig(
   val pgUrl: String,
   val pgUser: String,
   val pgPassword: String,
+  val pgMaximumPoolSize: String,
+  val pgMinimumIdle: String,
+  val pgIdleTimeout: String,
+  val pgConnectionTimeout: String,
 )
 
 fun getApplicationConfig() =
@@ -13,6 +17,10 @@ fun getApplicationConfig() =
     pgUrl = getRequiredEnv("PG_URL"),
     pgUser = getRequiredEnv("PG_USER"),
     pgPassword = getRequiredEnv("PG_PASSWORD"),
+    pgMaximumPoolSize = getRequiredEnv("PG_MAXIMUM_POOL_SIZE"),
+    pgMinimumIdle = getRequiredEnv("PG_MINIMUM_IDLE"),
+    pgIdleTimeout = getRequiredEnv("PG_IDLE_TIMEOUT"),
+    pgConnectionTimeout = getRequiredEnv("PG_CONNECTION_TIMEOUT"),
   )
 
 fun getRequiredEnv(name: String): String {

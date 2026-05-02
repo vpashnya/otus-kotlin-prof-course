@@ -9,3 +9,7 @@ services:
       PG_URL: ""
       PG_USER: ""
       PG_PASSWORD: ""
+      PG_MAXIMUM_POOL_SIZE: ""
+      PG_MINIMUM_IDLE: ""
+      PG_IDLE_TIMEOUT: ""
+      PG_CONNECTION_TIMEOUT: ""

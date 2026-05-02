@@ -379,6 +379,10 @@ class ApplicationV1StubApiTests {
     pgUrl = "",
     pgUser = "",
     pgPassword = "",
+    pgMaximumPoolSize = "",
+    pgMinimumIdle = "",
+    pgIdleTimeout = "",
+    pgConnectionTimeout = "",
   )
 
   private val applicationSettings = initApplicationSettings(applicationConfig)

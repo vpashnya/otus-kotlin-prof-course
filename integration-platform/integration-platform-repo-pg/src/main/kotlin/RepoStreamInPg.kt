@@ -7,6 +7,8 @@ import DBIPStreams.classShortName
 import DBIPStreams.description
 import DBIPStreams.methodShortName
 import DBIPStreams.transportParams
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection
@@ -47,10 +49,24 @@ class RepoStreamInPg : IRepoStream {
     liquibase.update("")
   }
 
-  private fun exposedConnect(credentials: PgCredentials) =
-    credentials.apply {
-      Database.connect(url = url, driver = "org.postgresql.Driver", user = user, password = password)
+  private fun exposedConnect(credentials: PgCredentials) {
+    credentials.let { creds ->
+      val config = HikariConfig().apply {
+        jdbcUrl = creds.url
+        driverClassName = "org.postgresql.Driver"
+        username = creds.user
+        password = creds.password
+        maximumPoolSize = creds.maximumPoolSize
+        minimumIdle = creds.minimumIdle
+        idleTimeout = creds.idleTimeout
+        connectionTimeout = creds.connectionTimeout
+      }
+
+      val connectionPull = HikariDataSource(config)
+
+      Database.connect(connectionPull)
     }
+  }
 
   override suspend fun createStream(request: RepoIPStreamRequest): RepoIPStreamResponse =
     transaction {
@@ -112,7 +128,7 @@ class RepoStreamInPg : IRepoStream {
             (description like "%${request.description ?: ""}%") and
                 (classShortName like "%${request.classNameLike ?: ""}%") and
                 (methodShortName like "%${request.methodNameLike ?: ""}%")
-          } .map { it.mapToIPStream() }.sortedBy { it.id.asLong() }
+          }.map { it.mapToIPStream() }.sortedBy { it.id.asLong() }
       )
     }
 
@@ -125,8 +141,8 @@ class RepoStreamInPg : IRepoStream {
 
   fun changeInDb(
     request: RepoIPStreamRequest,
-    action: String,
     errorCode: String,
+    action: String,
     func: UpdateStatement.(IPStream) -> Unit,
   ): RepoIPStreamResponse =
     transaction {

@@ -12,6 +12,10 @@ KAFKA_IP_STREAM_TOPIC_V1_OUT="ip.stream.v1.out"
 PG_URL=jdbc:postgresql://localhost:5432/mydatabase
 PG_USER=myuser
 PG_PASSWORD=mypassword
+PG_MAXIMUM_POOL_SIZE=10
+PG_MINIMUM_IDLE=5
+PG_IDLE_TIMEOUT=60000
+PG_CONNECTION_TIMEOUT=30000
 
 ## Запросы (примеры)
 

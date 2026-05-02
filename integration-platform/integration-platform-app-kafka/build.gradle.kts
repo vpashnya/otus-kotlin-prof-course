@@ -25,6 +25,7 @@ dependencies {
   implementation(libs.exposed.jdbc)
   implementation(libs.exposed.dao)
   implementation(libs.sqldelight.driver)
+  implementation(libs.hikari.cp)
 
   testRuntimeOnly(libs.jupiter.engine)
   testImplementation(libs.jupiter.params)
