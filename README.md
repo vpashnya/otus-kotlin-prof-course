@@ -64,12 +64,12 @@ Integration Platform - интеграционная платформа для б
 
 ### Сборка
 ```shell
-docker compose -f docker-compose.yml build
+docker compose -f docker-compose.build.yml build
 ```
 
 ### Запуск
 ```shell
-docker compose -f docker-compose.yml up -d integration-service
+docker compose -f docker-compose.yml up -d app-kafka app-ktor
 ```
 
 

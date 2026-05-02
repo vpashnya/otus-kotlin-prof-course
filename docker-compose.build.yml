@@ -1,0 +1,14 @@
+services:
+  integration-platform-app-ktor:
+    image: integration-platform-app-ktor
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: integration-platform-app-ktor
+
+  integration-platform-app-kafka:
+    image: integration-platform-app-kafka
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: integration-platform-app-kafka
