@@ -33,9 +33,8 @@ import ru.pvn.integration.platform.api.v1.models.StreamSearchResponse
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateObject
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateRequest
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateResponse
-import ru.pvn.integration.platform.kafka.ApplicationConfig
+import ru.pvn.integration.platform.kafka.ApplicationConfigData
 import ru.pvn.integration.platform.kafka.IPStreamHandler
-import ru.pvn.integration.platform.kafka.createIPStreamTopicPair
 import ru.pvn.integration.platform.kafka.initApplicationSettings
 import java.util.Collections
 import kotlin.String
@@ -370,7 +369,7 @@ class ApplicationV1StubApiTests {
     ),
   }
 
-  private val applicationConfig = ApplicationConfig(
+  private val applicationConfig = ApplicationConfigData(
     mode = "STUB",
     kafkaHosts = emptyList(),
     kafkaGroupId = "",

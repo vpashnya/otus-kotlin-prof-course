@@ -11,14 +11,16 @@ import ru.pvn.learning.repo.IRepoStream
 data class ApplicationSettings(
   val mode: Mode,
   val ipStreamProcessor: IPStreamProcessor,
-  val ipStreamRepo: IRepoStream
+  val ipStreamRepo: IRepoStream,
 )
 
 enum class Mode {
   PROD, TEST, STUB
 }
 
-fun initApplicationSettings(applicationConfig: ApplicationConfig):  ApplicationSettings{
+fun initApplicationSettings(applicationConfig: ApplicationConfig): ApplicationSettings {
+  applicationConfig as ApplicationConfigData
+
   val mode = Mode.valueOf(applicationConfig.mode)
 
   val pgCredentials = applicationConfig.run {
@@ -43,4 +45,3 @@ fun initApplicationSettings(applicationConfig: ApplicationConfig):  ApplicationS
     }
   )
 }
-

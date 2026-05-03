@@ -35,6 +35,7 @@ data class IPContext(
   var streamFilterRequestValidated: IPStreamFilter = IPStreamFilter(),
 
   var streamRepo: IRepoStream = IRepoStream.NONE,
+
   var streamRequestToRepo: IPStream = IPStream(),
   var streamFilterRequestToRepo: IPStreamFilter = IPStreamFilter(),
   var streamResponseFromRepo: IPStream = IPStream(),

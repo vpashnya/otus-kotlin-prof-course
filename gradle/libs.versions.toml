@@ -17,6 +17,7 @@ liquibase ="4.32.0"
 exposed = "1.2.0"
 testcontainers = "2.0.4"
 hikari = "5.1.0"
+koin_version = "4.1.1"
 
 # BASE
 jvm-compiler = "17"
@@ -43,6 +44,11 @@ jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.re
 jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "jupiter-version" }
 jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter-version" }
 mockito = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-version" }
+
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin_version" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin_version" }
+koin-test-junit = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin_version" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }

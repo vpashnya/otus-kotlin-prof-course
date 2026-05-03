@@ -7,7 +7,6 @@ plugins {
 group = rootProject.group
 version = rootProject.version
 
-
 dependencies {
   implementation(libs.kafka.client)
   implementation(libs.logback.classic)
@@ -26,6 +25,11 @@ dependencies {
   implementation(libs.exposed.dao)
   implementation(libs.sqldelight.driver)
   implementation(libs.hikari.cp)
+
+  implementation(libs.koin.core)
+  testImplementation(libs.koin.test)
+  testImplementation(libs.koin.test.junit)
+
 
   testRuntimeOnly(libs.jupiter.engine)
   testImplementation(libs.jupiter.params)
