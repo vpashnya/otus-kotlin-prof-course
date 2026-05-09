@@ -26,8 +26,21 @@ dependencies {
   runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
 }
 
-
-
 tasks.test {
   useJUnitPlatform()
+}
+
+tasks.withType<Jar> {
+  manifest {
+    attributes["Main-Class"] = "ru.pvn.learning.MainKt"
+  }
+
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  from(sourceSets.main.get().output)
+
+  dependsOn(configurations.runtimeClasspath)
+  from({
+    configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+  })
 }

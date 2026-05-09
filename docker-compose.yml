@@ -1,5 +1,6 @@
 services:
   app-ktor:
+#    container_name: app-ktor
     image: integration-platform-app-ktor:latest
     ports:
       - "8888:8080"
@@ -38,6 +39,23 @@ services:
       PG_MINIMUM_IDLE: "5"
       PG_IDLE_TIMEOUT: "60000"
       PG_CONNECTION_TIMEOUT: "30000"
+
+  testing-machine:
+    image: testing-machine:latest
+    depends_on:
+      app-ktor:
+        condition: service_started
+      app-kafka:
+        condition: service_started
+      pgdb:
+        condition: service_healthy
+    environment:
+      KAFKA_HOSTS: "kafka1:29092"
+      KAFKA_GROUP_ID: "integration-platform"
+      KAFKA_IP_STREAM_TOPIC_V1_IN: "ip.stream.v1.in"
+      KAFKA_IP_STREAM_TOPIC_V1_OUT: "ip.stream.v1.out"
+      KTOR_APP_URL: "http://app-ktor:8080"
+
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.7

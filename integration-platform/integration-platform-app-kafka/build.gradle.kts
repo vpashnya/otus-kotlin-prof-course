@@ -18,6 +18,7 @@ dependencies {
   implementation(project(":integration-platform-business-logic"))
   implementation(project(":integration-platform-repo-inmemory"))
   implementation(project(":integration-platform-repo-pg"))
+  implementation(project(":metadata-actualizer"))
   implementation(libs.postgresql.lib)
   implementation(libs.liquibase.lib)
   implementation(libs.exposed.core)

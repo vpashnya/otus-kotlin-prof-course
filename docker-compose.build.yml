@@ -12,3 +12,10 @@ services:
       context: .
       dockerfile: Dockerfile
       target: integration-platform-app-kafka
+
+  testing-machine:
+    image: testing-machine
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing-machine

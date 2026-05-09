@@ -31,6 +31,7 @@ dependencies {
   implementation(libs.exposed.dao)
   implementation(libs.sqldelight.driver)
   implementation(libs.hikari.cp)
+  implementation(libs.kafka.client)
 
   implementation(project(":integration-platform-common"))
   implementation(project(":integration-platform-api-v1"))
@@ -38,6 +39,7 @@ dependencies {
   implementation(project(":integration-platform-business-logic"))
   implementation(project(":integration-platform-repo-inmemory"))
   implementation(project(":integration-platform-repo-pg"))
+  implementation(project(":metadata-actualizer"))
 
   testRuntimeOnly(libs.jupiter.engine)
   testImplementation(libs.jupiter.params)

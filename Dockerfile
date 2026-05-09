@@ -12,10 +12,6 @@ COPY gradle.properties ./gradle.properties
 COPY settings.gradle.kts ./settings.gradle.kts
 COPY specs/specs-integration-platform.yaml ./specs/specs-integration-platform.yaml
 
-# COPY lessons/build.gradle.kts ./lessons/build.gradle.kts
-# COPY lessons/gradle.properties ./lessons/gradle.properties
-# COPY lessons/settings.gradle.kts ./lessons/settings.gradle.kts
-
 COPY build-plugin/build.gradle.kts ./build-plugin/build.gradle.kts
 COPY build-plugin/gradle.properties ./build-plugin/gradle.properties
 COPY build-plugin/settings.gradle.kts ./build-plugin/settings.gradle.kts
@@ -65,6 +61,11 @@ COPY integration-platform/integration-platform-app-ktor/build.gradle.kts ./integ
 COPY integration-platform/integration-platform-app-ktor/src ./integration-platform/integration-platform-app-ktor/src
 RUN ./gradlew --no-daemon integration-platform:integration-platform-app-ktor:build
 
+COPY integration-platform/testing-machine/build.gradle.kts ./integration-platform/testing-machine/build.gradle.kts
+COPY integration-platform/testing-machine/src ./integration-platform/testing-machine/src
+RUN ./gradlew --no-daemon integration-platform:testing-machine:build
+
+
 FROM ${RUNTIME_IMG} AS integration-platform-app-kafka
 WORKDIR /opt/app
 COPY --from=builder /app/integration-platform/integration-platform-app-kafka/build/libs/*.jar /app.jar
@@ -73,4 +74,9 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 FROM ${RUNTIME_IMG} AS integration-platform-app-ktor
 WORKDIR /opt/app
 COPY --from=builder /app/integration-platform/integration-platform-app-ktor/build/libs/*.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+FROM ${RUNTIME_IMG} AS testing-machine
+WORKDIR /opt/app
+COPY --from=builder /app/integration-platform/testing-machine/build/libs/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]

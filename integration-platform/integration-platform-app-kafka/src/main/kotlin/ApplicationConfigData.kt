@@ -12,6 +12,7 @@ interface ApplicationConfig {
   fun createIPStreamConsumer(): KafkaConsumer<String, String>
   fun createIPStreamProducer(): KafkaProducer<String, String>
   fun createIPStreamTopicPair(): TopicPair
+  fun createMetadataActualizerProducer(): KafkaProducer<String, String>
 }
 
 data class ApplicationConfigData(
@@ -20,6 +21,7 @@ data class ApplicationConfigData(
   val kafkaGroupId: String,
   val kafkaIPStreamTopicIn: String,
   val kafkaIPStreamTopicOut: String,
+  val kafkaMetaActualizerTopic: String,
   val pgUrl: String,
   val pgUser: String,
   val pgPassword: String,
@@ -53,6 +55,15 @@ data class ApplicationConfigData(
     outgoing = kafkaIPStreamTopicOut
   )
 
+  override fun createMetadataActualizerProducer(): KafkaProducer<String, String> {
+    val props = Properties().apply {
+      put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts)
+      put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+      put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+    }
+    return KafkaProducer<String, String>(props)
+  }
+
 }
 
 fun getApplicationConfig(): ApplicationConfig =
@@ -62,6 +73,7 @@ fun getApplicationConfig(): ApplicationConfig =
     kafkaGroupId = getRequiredEnv("KAFKA_GROUP_ID"),
     kafkaIPStreamTopicIn = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_IN"),
     kafkaIPStreamTopicOut = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_OUT"),
+    kafkaMetaActualizerTopic = getRequiredEnv("KAFKA_META_ACTUALIZER_TOPIC"),
     pgUrl = getRequiredEnv("PG_URL"),
     pgUser = getRequiredEnv("PG_USER"),
     pgPassword = getRequiredEnv("PG_PASSWORD"),

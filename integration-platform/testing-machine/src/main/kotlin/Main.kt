@@ -6,11 +6,11 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder
 import org.junit.platform.launcher.core.LauncherFactory
 
 fun main() {
-  val requests = LauncherDiscoveryRequestBuilder.request()
-    .selectors(
-      selectPackage("ru.pvn.learning.tests")
-    )
-    .build()
+  val requests =
+    LauncherDiscoveryRequestBuilder
+      .request()
+      .selectors(selectPackage("ru.pvn.learning.tests"))
+      .build()
 
   val launcher = LauncherFactory.create()
   launcher.execute(requests)
