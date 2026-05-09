@@ -375,6 +375,7 @@ class ApplicationV1StubApiTests {
     kafkaGroupId = "",
     kafkaIPStreamTopicIn = "test.in",
     kafkaIPStreamTopicOut = "test.out",
+    kafkaMetaActualizerTopic = "",
     pgUrl = "",
     pgUser = "",
     pgPassword = "",

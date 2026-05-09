@@ -3,17 +3,17 @@ package ru.pvn.integration.platform.kafka
 import ru.pvn.integration.platform.kafka.Mode.*
 import IPStreamProcessor
 import ru.pvn.integration.platform.repo.inmemory.RepoStreamInMemory
-import ru.pvn.learning.MetadataActualizer
-import ru.pvn.learning.MetadataActualizerImpl
+import ru.pvn.learning.MetadataActualizerKafka
 import ru.pvn.learning.PgCredentials
 import ru.pvn.learning.RepoStreamInPg
+import ru.pvn.learning.actualizer.MetadataActualizer
 import ru.pvn.learning.repo.IRepoStream
 
 data class ApplicationSettings(
   val mode: Mode,
   val ipStreamProcessor: IPStreamProcessor,
   val ipStreamRepo: IRepoStream,
-  val metadataActualizer: MetadataActualizer
+  val metadataActualizer: MetadataActualizer,
 )
 
 enum class Mode {
@@ -44,19 +44,18 @@ fun initApplicationSettings(applicationConfig: ApplicationConfig): ApplicationSe
   }
 
   val metaActualizer = when (mode) {
-    PROD -> MetadataActualizerImpl(
-      producer = applicationConfig.createMetadataActualizerProducer(),
+    PROD -> MetadataActualizerKafka(
+      producer = applicationConfig.createKafkaProducer(),
       topic = applicationConfig.kafkaMetaActualizerTopic,
       initiator = "appKafka",
     )
     else -> MetadataActualizer.NONE
-  } as MetadataActualizer
+  }
 
   return ApplicationSettings(
     mode = mode,
     ipStreamProcessor = IPStreamProcessor(),
     ipStreamRepo = streamRepo,
     metadataActualizer = metaActualizer
-
   )
 }

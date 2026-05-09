@@ -3,6 +3,7 @@ import ru.pvn.integration.platform.business.dsl.initState
 import ru.pvn.integration.platform.business.dsl.repoProcess
 import ru.pvn.integration.platform.business.dsl.stubs
 import ru.pvn.integration.platform.business.dsl.validation
+import ru.pvn.integration.platform.business.metadata.metadataRefresh
 import ru.pvn.integration.platform.business.repo.accessibleInRepo
 import ru.pvn.integration.platform.business.repo.createInRepo
 import ru.pvn.integration.platform.business.repo.deleteInRepo
@@ -41,6 +42,7 @@ class IPStreamProcessor {
         repoProcess("Сохранение нового объекта в БД"){
           createInRepo()
         }
+        metadataRefresh()
       }
       command(UPDATE, "Изменение интеграционного потока") {
         stubs("Обработка заглушек") {
@@ -56,6 +58,7 @@ class IPStreamProcessor {
         repoProcess("Изменение объекта в БД"){
           updateInRepo()
         }
+        metadataRefresh()
       }
       command(DELETE, "Удаление интеграционного потока") {
         stubs("Обработка заглушек") {
@@ -69,6 +72,7 @@ class IPStreamProcessor {
         repoProcess("Удаление объекта в БД"){
           deleteInRepo()
         }
+        metadataRefresh()
       }
       command(READ, "Чтение информации об интеграционном потоке") {
         stubs(("Обработка заглушек")) {
@@ -94,6 +98,7 @@ class IPStreamProcessor {
         repoProcess("Изменение объекта в БД"){
           enableInRepo()
         }
+        metadataRefresh()
       }
       command(DISABLE, "Отключение интеграционного потока") {
         stubs("Обработка заглушек") {
@@ -106,6 +111,7 @@ class IPStreamProcessor {
         repoProcess("Изменение объекта в БД"){
           disableInRepo()
         }
+        metadataRefresh()
       }
       command(SEARCH, "Поиск интеграционных потоков") {
         stubs("Обработка заглушек") {

@@ -9,10 +9,9 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
 interface ApplicationConfig {
-  fun createIPStreamConsumer(): KafkaConsumer<String, String>
-  fun createIPStreamProducer(): KafkaProducer<String, String>
+  fun createKafkaConsumer(): KafkaConsumer<String, String>
+  fun createKafkaProducer(): KafkaProducer<String, String>
   fun createIPStreamTopicPair(): TopicPair
-  fun createMetadataActualizerProducer(): KafkaProducer<String, String>
 }
 
 data class ApplicationConfigData(
@@ -31,7 +30,7 @@ data class ApplicationConfigData(
   val pgConnectionTimeout: String,
 ) : ApplicationConfig {
 
-  override fun createIPStreamConsumer(): KafkaConsumer<String, String> {
+  override fun createKafkaConsumer(): KafkaConsumer<String, String> {
     val props = Properties().apply {
       put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts)
       put(ConsumerConfig.GROUP_ID_CONFIG, kafkaGroupId)
@@ -41,7 +40,7 @@ data class ApplicationConfigData(
     return KafkaConsumer<String, String>(props)
   }
 
-  override fun createIPStreamProducer(): KafkaProducer<String, String> {
+  override fun createKafkaProducer(): KafkaProducer<String, String> {
     val props = Properties().apply {
       put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts)
       put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
@@ -54,16 +53,6 @@ data class ApplicationConfigData(
     incoming = kafkaIPStreamTopicIn,
     outgoing = kafkaIPStreamTopicOut
   )
-
-  override fun createMetadataActualizerProducer(): KafkaProducer<String, String> {
-    val props = Properties().apply {
-      put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts)
-      put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-      put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-    }
-    return KafkaProducer<String, String>(props)
-  }
-
 }
 
 fun getApplicationConfig(): ApplicationConfig =

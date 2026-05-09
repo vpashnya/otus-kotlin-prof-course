@@ -41,6 +41,7 @@ import ru.pvn.integration.platform.api.v1.models.StreamUpdateObject
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateRequest
 import ru.pvn.integration.platform.api.v1.models.StreamUpdateResponse
 import ru.pvn.integration.platform.ktor.module
+import ru.pvn.learning.actualizer.MetadataActualizer
 import kotlin.test.assertEquals
 
 class ApplicationV1StubApiTests {
@@ -384,7 +385,7 @@ class ApplicationV1StubApiTests {
   @EnumSource
   fun routeTest(testCase: RequestCases) = testApplication {
     application {
-      module(ApplicationSettings(mode = STUB, ipStreamProcessor = IPStreamProcessor()))
+      module(ApplicationSettings(mode = STUB, ipStreamProcessor = IPStreamProcessor(), metadataActualizer = MetadataActualizer.NONE))
     }
 
     val client = createClient {

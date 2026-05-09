@@ -41,6 +41,10 @@ COPY integration-platform/integration-platform-business-logic/build.gradle.kts .
 COPY integration-platform/integration-platform-business-logic/src ./integration-platform/integration-platform-business-logic/src
 RUN ./gradlew --no-daemon integration-platform:integration-platform-business-logic:build
 
+COPY integration-platform/metadata-actualizer/build.gradle.kts ./integration-platform/metadata-actualizer/build.gradle.kts
+COPY integration-platform/metadata-actualizer/src ./integration-platform/metadata-actualizer/src
+RUN ./gradlew --no-daemon integration-platform:metadata-actualizer:build
+
 COPY integration-platform/integration-platform-repo-tests/build.gradle.kts ./integration-platform/integration-platform-repo-tests/build.gradle.kts
 COPY integration-platform/integration-platform-repo-tests/src ./integration-platform/integration-platform-repo-tests/src
 RUN ./gradlew --no-daemon integration-platform:integration-platform-repo-tests:build

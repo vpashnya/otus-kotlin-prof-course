@@ -69,7 +69,7 @@ docker compose -f docker-compose.build.yml build
 
 ### Запуск
 ```shell
-docker compose -f docker-compose.yml up -d app-kafka app-ktor
+docker compose -f docker-compose.yml up -d testing-machine
 ```
 
 

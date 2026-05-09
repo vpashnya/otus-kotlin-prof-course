@@ -1,11 +1,13 @@
 services:
   app-ktor:
-#    container_name: app-ktor
     image: integration-platform-app-ktor:latest
     ports:
       - "8888:8080"
     environment:
       MODE: "PROD"
+      KAFKA_HOSTS: "kafka1:29092"
+      KAFKA_GROUP_ID: "integration-platform"
+      KAFKA_META_ACTUALIZER_TOPIC: "metadata.actualizer"
       PG_URL: "jdbc:postgresql://pgdb:5432/mydatabase"
       PG_USER: "myuser"
       PG_PASSWORD: "mypassword"
@@ -32,6 +34,7 @@ services:
       KAFKA_GROUP_ID: "integration-platform"
       KAFKA_IP_STREAM_TOPIC_V1_IN: "ip.stream.v1.in"
       KAFKA_IP_STREAM_TOPIC_V1_OUT: "ip.stream.v1.out"
+      KAFKA_META_ACTUALIZER_TOPIC: "metadata.actualizer"
       PG_URL: "jdbc:postgresql://pgdb:5432/mydatabase"
       PG_USER: "myuser"
       PG_PASSWORD: "mypassword"

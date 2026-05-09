@@ -12,8 +12,8 @@ fun main() {
   val appModule = module(createdAtStart = true)  {
     single<ApplicationConfig> { getApplicationConfig() }
     single<ApplicationSettings> { initApplicationSettings(get()) }
-    single<KafkaConsumer<String, String>>(named("IP_STREAM_CONSUMER")) { get<ApplicationConfig>().createIPStreamConsumer() }
-    single<KafkaProducer<String, String>>((named("IP_STREAM_PRODUCER"))) { get<ApplicationConfig>().createIPStreamProducer() }
+    single<KafkaConsumer<String, String>>(named("IP_STREAM_CONSUMER")) { get<ApplicationConfig>().createKafkaConsumer() }
+    single<KafkaProducer<String, String>>((named("IP_STREAM_PRODUCER"))) { get<ApplicationConfig>().createKafkaProducer() }
     single<TopicPair>(named("IP_STREAM_TOPICS")) { get<ApplicationConfig>().createIPStreamTopicPair() }
     single {
       IPStreamHandler(

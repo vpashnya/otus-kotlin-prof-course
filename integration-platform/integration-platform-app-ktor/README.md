@@ -5,6 +5,9 @@
 
 ## Параметры среды (пример)
 MODE=PROD
+KAFKA_HOSTS="127.0.0.1:9092"
+KAFKA_GROUP_ID="integration-platform"
+KAFKA_META_ACTUALIZER_TOPIC="metadata.actualizer"
 PG_URL=jdbc:postgresql://localhost:5432/mydatabase
 PG_USER=myuser
 PG_PASSWORD=mypassword

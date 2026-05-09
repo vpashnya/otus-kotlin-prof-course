@@ -3,7 +3,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import ru.pvn.learning.MetadataActualizerImpl
+import ru.pvn.learning.MetadataActualizerKafka
 
 
 class MetadataActualizerTest {
@@ -11,7 +11,7 @@ class MetadataActualizerTest {
   @Test
   fun test() {
     val producer = MockProducer(true, StringSerializer(), StringSerializer())
-    val actualizer = MetadataActualizerImpl(producer, "test", "test intiator")
+    val actualizer = MetadataActualizerKafka(producer, "test", "test intiator")
     actualizer.sendRefresh()
 
     assertEquals(
