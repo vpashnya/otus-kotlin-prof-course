@@ -1,8 +1,33 @@
 services:
+  processor-kafka:
+    image: integration-processor-kafka:latest
+    depends_on:
+      kafka1:
+        condition: service_started
+      kafdrop:
+        condition: service_started
+      pgdb:
+        condition: service_healthy
+      ancient-monolith:
+        condition: service_started
+      app-ktor:
+        condition: service_started
+    environment:
+      KAFKA_HOSTS: "kafka1:29092"
+      KAFKA_GROUP_ID: "integration-processor-kafka"
+      KAFKA_META_ACTUALIZER_TOPIC: "metadata.actualizer"
+      IP_STREAM_APP_KTOR_URL: "http://otus-kotlin-prof-course-app-ktor-1:8080/v1/ip/stream"
+      ANCIENT_MONOLITH_URL: "http://ancient-monolith:9999/magicgate/tooktook"
+
   app-ktor:
     image: integration-platform-app-ktor:latest
     ports:
       - "8888:8080"
+    depends_on:
+      pgdb:
+        condition: service_healthy
+      ancient-monolith:
+        condition: service_started
     environment:
       MODE: "PROD"
       KAFKA_HOSTS: "kafka1:29092"
@@ -15,9 +40,6 @@ services:
       PG_MINIMUM_IDLE: "5"
       PG_IDLE_TIMEOUT: "60000"
       PG_CONNECTION_TIMEOUT: "30000"
-    depends_on:
-      pgdb:
-        condition: service_healthy
 
   app-kafka:
     image: integration-platform-app-kafka:latest
@@ -28,6 +50,10 @@ services:
         condition: service_started
       pgdb:
         condition: service_healthy
+      ancient-monolith:
+        condition: service_started
+      app-ktor:
+        condition: service_started
     environment:
       MODE: "PROD"
       KAFKA_HOSTS: "kafka1:29092"
@@ -43,12 +69,23 @@ services:
       PG_IDLE_TIMEOUT: "60000"
       PG_CONNECTION_TIMEOUT: "30000"
 
+  ancient-monolith:
+    image: ancient-monolith:latest
+    container_name: ancient-monolith
+    ports:
+      - "9009:9999"
+    depends_on:
+      pgdb:
+        condition: service_healthy
+
   testing-machine:
     image: testing-machine:latest
     depends_on:
       app-ktor:
         condition: service_started
       app-kafka:
+        condition: service_started
+      processor-kafka:
         condition: service_started
       pgdb:
         condition: service_healthy

@@ -34,7 +34,7 @@ class KafkaMetaTests {
       stream = StreamCreateObject(
         classShortName = "KAFKATEST",
         methodShortName = "EXPORT2FNS",
-        transportParams = "some transport",
+        transportParams = "ex1",
         description = "Отправка информации в ФНС"
       )
     )

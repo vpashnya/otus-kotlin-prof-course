@@ -14,9 +14,6 @@ pluginManagement {
     id("build-jvm") apply false
   }
 }
-
-include(":integration-service")
-include(":integration-module")
 include(":integration-platform-common")
 include(":integration-platform-api-v1")
 include(":integration-platform-api-v1-mappers")
@@ -28,4 +25,6 @@ include(":integration-platform-repo-pg")
 include(":integration-platform-repo-inmemory")
 include(":integration-platform-repo-tests")
 include(":metadata-actualizer")
+include(":integration-processor-kafka")
+include(":integration-processor-ktor")
 include(":testing-machine")

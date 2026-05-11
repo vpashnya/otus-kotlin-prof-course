@@ -1,4 +1,11 @@
 services:
+  ancient-monolith:
+    image: ancient-monolith
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ancient-monolith
+
   integration-platform-app-ktor:
     image: integration-platform-app-ktor
     build:
@@ -12,6 +19,13 @@ services:
       context: .
       dockerfile: Dockerfile
       target: integration-platform-app-kafka
+
+  integration-processor-kafka:
+    image: integration-processor-kafka
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: integration-processor-kafka
 
   testing-machine:
     image: testing-machine

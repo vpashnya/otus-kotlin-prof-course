@@ -44,7 +44,7 @@ class KtorMetaTests {
       stream = StreamCreateObject(
         classShortName = "KTORTEST",
         methodShortName = "EXPORT2FNS",
-        transportParams = "some transport",
+        transportParams = "ex2",
         description = "Отправка информации в ФНС"
       )
     )
