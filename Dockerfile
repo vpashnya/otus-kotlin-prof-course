@@ -96,6 +96,7 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 FROM ${RUNTIME_IMG} AS integration-platform-app-ktor
 WORKDIR /opt/app
 COPY --from=builder /app/integration-platform/integration-platform-app-ktor/build/libs/*.jar /app.jar
+RUN apk add --no-cache curl
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 FROM ${RUNTIME_IMG} AS integration-processor-kafka

@@ -1,6 +1,7 @@
 package ru.pvn.learning.repo
 
 interface IRepoStream {
+  val isOk: Boolean
   suspend fun createStream(request: RepoIPStreamRequest): RepoIPStreamResponse
   suspend fun readStream(request: RepoIPStreamIdRequest): RepoIPStreamResponse
   suspend fun updateStream(request: RepoIPStreamRequest): RepoIPStreamResponse
@@ -12,6 +13,7 @@ interface IRepoStream {
 
   companion object {
     val NONE = object : IRepoStream {
+      override val isOk = true
       override suspend fun createStream(request: RepoIPStreamRequest): RepoIPStreamResponse {
         throw NotImplementedError("Must not be used")
       }

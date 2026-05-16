@@ -1,84 +1,108 @@
 package ru.pvn.learning.tests
 
 import apiV1RequestSerialize
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.DisplayName
 import ru.pvn.integration.platform.api.v1.models.StreamCreateObject
 import ru.pvn.integration.platform.api.v1.models.StreamCreateRequest
-import java.util.Properties
 import kotlin.random.Random
 import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory
+import ru.pvn.learning.applicationConfig
+import ru.pvn.learning.config.ApplicationConfigData
 import java.time.Duration
-import kotlin.jvm.java
 
 
 class KafkaMetaTests {
 
+  private val logger = LoggerFactory.getLogger("KafkaMetaTests")
+  private val applicationConfigData = (applicationConfig as ApplicationConfigData)
+
+  enum class MonolithClasses {
+    PR_CRED, MAIN_DOCUM, DOCUMENT, KRED_CORP, DEPOSIT_PRIV, DEPOSIT_ORG, BASE_VAL_OP
+  }
+
+  enum class MonolithMethods {
+    NEW_AUTO, EDIT_AUTO, DELETE_AUTO, LIB, CALC_PARAMS,
+  }
+
+  enum class TransportParams {
+    ex1, ex2, ex3
+  }
+
+
   @DisplayName("Kafka - tests")
   @Test
-  fun createTest() {
-    val producerProps = Properties().apply {
-      put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-      put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-      put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-    }
-
-    val createRequest = StreamCreateRequest(
-      requestType = "CREATE",
-      stream = StreamCreateObject(
-        classShortName = "KAFKATEST",
-        methodShortName = "EXPORT2FNS",
-        transportParams = "ex1",
-        description = "Отправка информации в ФНС"
-      )
-    )
-
-
-    KafkaProducer<String, String>(producerProps).use { producer ->
-      val value = Random.nextInt()
-      val record = ProducerRecord("ip.stream.v1.in", value.toString(), apiV1RequestSerialize(createRequest))
-      producer.send(record) { metadata, exception ->
-        if (exception == null)
-          println("Sent: ${metadata.offset()}")
-        else
-          exception.printStackTrace()
+  fun test() {
+    val streams = buildList {
+      MonolithClasses.entries.forEach { cl ->
+        MonolithMethods.entries.forEach { mth ->
+          if (Random.nextBoolean())
+            add(IntegrationStream(cl, mth, TransportParams.entries.random()))
+        }
       }
     }
 
-    println("Finish kafka!")
+    logger.info("---=== create metadata ===---")
+    sendMetadataToKafka(streams)
 
+    logger.info("---=== receive metadata ===---")
+    receiveMetadataFromKafka()
 
-    val consumerProps = Properties().apply {
-      put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092") // Kafka broker address
-      put(ConsumerConfig.GROUP_ID_CONFIG, "test-consumer-group") // Consumer group ID
-      put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.name)
-      put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.name)
-      put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest") // Start from the beginning if no offset is committed
-    }
+  }
 
+  private fun sendMetadataToKafka(streams: List<IntegrationStream>) {
 
-    val consumer = KafkaConsumer<String, String>(consumerProps)
+    applicationConfigData.createKafkaProducer().use { producer ->
+      val records = streams.map { stream ->
+        val createRequest = StreamCreateRequest(
+          requestType = "CREATE",
+          stream = StreamCreateObject(
+            classShortName = stream.mClass.name,
+            methodShortName = stream.mMethod.name,
+            transportParams = stream.mTransportParams.name,
+            description = "Отправка информации в ФНС"
+          )
+        )
+        ProducerRecord<String, String>(
+          applicationConfigData.kafkaIPStreamTopicIn,
+          null,
+          apiV1RequestSerialize(createRequest)
+        )
+      }
 
-    consumer.subscribe(listOf("ip.stream.v1.out"))
+      records.forEach { record ->
+        producer.send(record) { metadata, exception ->
+          if (exception == null)
+            logger.info("Sent: $record with offset ${metadata.offset()}")
+          else
+            logger.info(exception.toString())
 
-    try {
-
-        val records = consumer.poll(Duration.ofMillis(1000)) // Poll for records
-        for (record in records) {
-          println("Received record: offset = ${record.offset()}, key = ${record.key()}, value = ${record.value()} in partition ${record.partition()}")
         }
+      }
+      producer.flush()
+    }
+  }
 
+  private fun receiveMetadataFromKafka() {
+    val consumer = applicationConfigData.createKafkaConsumer()
+    consumer.subscribe(listOf(applicationConfigData.kafkaIPStreamTopicOut))
+    try {
+      val records = consumer.poll(Duration.ofMillis(1000)) // Poll for records
+      for (record in records) {
+        logger.info("Received record: offset = ${record.offset()}, key = ${record.key()}, value = ${record.value()} in partition ${record.partition()}")
+      }
     } catch (e: Exception) {
-      e.printStackTrace()
+      logger.info(e.message)
     } finally {
       consumer.close()
     }
   }
+
+  data class IntegrationStream(
+    val mClass: MonolithClasses,
+    val mMethod: MonolithMethods,
+    val mTransportParams: TransportParams,
+  )
 
 }

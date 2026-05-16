@@ -37,8 +37,10 @@ import ru.pvn.learning.repo.RepoIPStreamsResponseOk
 import java.sql.DriverManager
 
 class RepoStreamInPg : IRepoStream {
+  override val isOk: Boolean
   constructor(credentials: PgCredentials) {
     runMigration(credentials)
+    isOk = true
     exposedConnect(credentials)
   }
 

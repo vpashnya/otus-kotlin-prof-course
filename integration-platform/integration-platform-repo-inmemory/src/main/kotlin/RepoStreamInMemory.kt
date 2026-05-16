@@ -32,6 +32,7 @@ class RepoStreamInMemory(
     }
   }(),
 ) : IRepoStream {
+  override val isOk = true
   private val queries = db.inMemoryDatabaseQueries
 
   override suspend fun createStream(request: RepoIPStreamRequest): RepoIPStreamResponse =
