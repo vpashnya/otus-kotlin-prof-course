@@ -1,10 +1,11 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.kotlinx.serialization)
+  alias(libs.plugins.sqldelight.pl)
 }
 
 group = rootProject.group
 version = rootProject.version
-
 
 dependencies {
   implementation(libs.kafka.client)
@@ -17,6 +18,19 @@ dependencies {
   implementation(project(":integration-platform-business-logic"))
   implementation(project(":integration-platform-repo-inmemory"))
   implementation(project(":integration-platform-repo-pg"))
+  implementation(project(":metadata-actualizer"))
+  implementation(libs.postgresql.lib)
+  implementation(libs.liquibase.lib)
+  implementation(libs.exposed.core)
+  implementation(libs.exposed.jdbc)
+  implementation(libs.exposed.dao)
+  implementation(libs.sqldelight.driver)
+  implementation(libs.hikari.cp)
+
+  implementation(libs.koin.core)
+  testImplementation(libs.koin.test)
+  testImplementation(libs.koin.test.junit)
+
 
   testRuntimeOnly(libs.jupiter.engine)
   testImplementation(libs.jupiter.params)

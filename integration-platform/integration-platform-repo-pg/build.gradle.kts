@@ -14,6 +14,7 @@ dependencies {
   implementation(libs.exposed.core)
   implementation(libs.exposed.jdbc)
   implementation(libs.exposed.dao)
+  implementation(libs.hikari.cp)
   implementation(libs.testcontainers.postgres)
 
   testRuntimeOnly(libs.jupiter.engine)

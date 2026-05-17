@@ -252,6 +252,8 @@ components:
           $ref: '#/components/schemas/TransportParams'
         description:
           $ref: '#/components/schemas/Description'
+        version:
+          $ref: '#/components/schemas/Version'
 
     StreamId:
       type: string
@@ -271,6 +273,9 @@ components:
     Description:
       type: string
       description: Описание интеграционного потока
+    Version:
+      type: string
+      description: Версия записи в БД
 
     StreamCreateObject:
       allOf:
@@ -361,6 +366,8 @@ components:
           properties:
             streamId:
               $ref: '#/components/schemas/StreamId'
+            version:
+              $ref: '#/components/schemas/Version'
 
     StreamDisableRequest:
       allOf:
@@ -370,6 +377,8 @@ components:
           properties:
             streamId:
               $ref: '#/components/schemas/StreamId'
+            version:
+              $ref: '#/components/schemas/Version'
 
     StreamResponseObject:
       allOf:
@@ -389,6 +398,8 @@ components:
               $ref: '#/components/schemas/TransportParams'
             description:
               $ref: '#/components/schemas/Description'
+            version:
+              $ref: '#/components/schemas/Version'
 
     StreamResponseSingle:
       allOf:

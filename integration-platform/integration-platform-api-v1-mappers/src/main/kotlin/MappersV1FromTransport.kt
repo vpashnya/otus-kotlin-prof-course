@@ -19,6 +19,7 @@ import ru.pvn.learning.models.IPExternalSystemId
 import ru.pvn.learning.models.IPStream
 import ru.pvn.learning.models.IPStreamFilter
 import ru.pvn.learning.models.IPStreamId
+import ru.pvn.learning.models.IPStreamVersion
 import ru.pvn.learning.models.IPWorkMode
 import ru.pvn.learning.stubs.IPStubs
 import kotlin.String
@@ -45,9 +46,9 @@ fun IPContext.fromTransport(request: StreamCreateRequest) {
 
 fun IPContext.fromTransport(request: StreamDeleteRequest) {
   command = IPCommand.DELETE
-  request.streamId?.let { streamId -> streamRequest = streamId.toInternal() }
-  workMode = request.debug.transportToWorkMode()
   stubCase = request.debug.transportToStubCase()
+  workMode = request.debug.transportToWorkMode()
+  request.streamId?.let { streamId -> streamRequest = streamId.toInternal() }
 }
 
 fun IPContext.fromTransport(request: StreamReadRequest) {
@@ -89,16 +90,19 @@ fun IPContext.fromTransport(request: StreamAccessibleRequest) {
 
 fun IPContext.fromTransport(request: StreamEnableRequest) {
   command = IPCommand.ENABLE
-  request.streamId?.let { streamId -> streamRequest = streamId.toInternal() }
   workMode = request.debug.transportToWorkMode()
   stubCase = request.debug.transportToStubCase()
+  request.streamId?.let { streamId -> streamRequest = streamId.toInternal() }
+  request.version?.let { version -> streamRequest.version = IPStreamVersion(version) }
+
 }
 
 fun IPContext.fromTransport(request: StreamDisableRequest) {
   command = IPCommand.DISABLE
-  request.streamId?.let { streamId -> streamRequest = streamId.toInternal() }
   workMode = request.debug.transportToWorkMode()
   stubCase = request.debug.transportToStubCase()
+  request.streamId?.let { streamId -> streamRequest = streamId.toInternal() }
+  request.version?.let { version -> streamRequest.version = IPStreamVersion(version) }
 }
 
 fun String.toInternal() = IPStream(
@@ -110,6 +114,7 @@ fun StreamCreateObject.toInternal() = IPStream(
   classShortName = classShortName ?: "",
   methodShortName = methodShortName ?: "",
   transportParams = transportParams ?: "",
+  version = version?.let { IPStreamVersion(it) } ?: IPStreamVersion.NONE
 )
 
 fun StreamUpdateObject.toInternal() = IPStream(
@@ -117,7 +122,8 @@ fun StreamUpdateObject.toInternal() = IPStream(
   classShortName = classShortName ?: "",
   methodShortName = methodShortName ?: "",
   transportParams = transportParams ?: "",
-  id = id?.let { id -> IPStreamId(id) } ?: IPStreamId.NONE
+  id = id?.let { id -> IPStreamId(id) } ?: IPStreamId.NONE,
+  version = version?.let { IPStreamVersion(it) } ?: IPStreamVersion.NONE
 )
 
 private fun StreamDebug?.transportToWorkMode(): IPWorkMode = when (this?.mode) {

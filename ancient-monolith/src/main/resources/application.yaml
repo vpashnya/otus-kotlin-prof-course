@@ -1,0 +1,6 @@
+ktor:
+  application:
+    modules:
+      - ru.pvn.ancient.RoutingKt.configureRouting
+  deployment:
+    port: 9999
