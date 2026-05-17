@@ -6,10 +6,11 @@ import org.koin.dsl.module
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.inject
+import java.lang.Thread.sleep
 
 fun main() {
 
-  val appModule = module(createdAtStart = true)  {
+  val appModule = module(createdAtStart = true) {
     single<ApplicationConfig> { getApplicationConfig() }
     single<ApplicationSettings> { initApplicationSettings(get()) }
     single<KafkaConsumer<String, String>>(named("IP_STREAM_CONSUMER")) { get<ApplicationConfig>().createKafkaConsumer() }
@@ -29,6 +30,12 @@ fun main() {
     modules(appModule)
   }
 
-  val ipStreamHandler : IPStreamHandler by inject(IPStreamHandler::class.java)
+  val applicationSettings: ApplicationSettings by inject(ApplicationSettings::class.java)
+
+  while (!applicationSettings.ipStreamRepo.isOk) {
+    sleep(1000)
+  }
+
+  val ipStreamHandler: IPStreamHandler by inject(IPStreamHandler::class.java)
   ipStreamHandler.start()
 }

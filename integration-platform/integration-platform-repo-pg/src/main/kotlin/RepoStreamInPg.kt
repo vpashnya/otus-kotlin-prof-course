@@ -72,15 +72,19 @@ class RepoStreamInPg : IRepoStream {
 
   override suspend fun createStream(request: RepoIPStreamRequest): RepoIPStreamResponse =
     transaction {
-      val ipStream = request.stream
-      val dbIPStream = DBIPStream.new {
-        description = ipStream.description
-        classShortName = ipStream.classShortName
-        methodShortName = ipStream.methodShortName
-        transportParams = ipStream.transportParams
-        version = 1
+      try{
+        val ipStream = request.stream
+        val dbIPStream = DBIPStream.new {
+          description = ipStream.description
+          classShortName = ipStream.classShortName
+          methodShortName = ipStream.methodShortName
+          transportParams = ipStream.transportParams
+          version = 1
+        }
+        RepoIPStreamResponseOk(dbIPStream.mapToIPStream())
+      }catch (e: Exception) {
+        e.buildRepoIPStreamResponseError("001", "creating error")
       }
-      RepoIPStreamResponseOk(dbIPStream.mapToIPStream())
     }
 
   override suspend fun readStream(request: RepoIPStreamIdRequest): RepoIPStreamResponse =

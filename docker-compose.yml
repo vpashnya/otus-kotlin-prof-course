@@ -4,7 +4,7 @@ services:
     depends_on:
       kafka1:
         condition: service_started
-      kafdrop:
+      kafka-ui:
         condition: service_started
       pgdb:
         condition: service_healthy
@@ -52,7 +52,7 @@ services:
     depends_on:
       kafka1:
         condition: service_started
-      kafdrop:
+      kafka-ui:
         condition: service_started
       pgdb:
         condition: service_healthy
@@ -137,17 +137,6 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
     hostname: kafka1
 
-  kafdrop:
-    image: obsidiandynamics/kafdrop:4.0.1
-    container_name: kafdrop-view
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: "kafka1:29092"
-    depends_on:
-      - "kafka1"
-    restart: "no"
-
   pgdb:
     image: postgres:latest
     container_name: pgdb
@@ -165,6 +154,16 @@ services:
       retries: 5
 
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "9900:8080"
+    extra_hosts:
+      - "rc1a-a067dql83qqvckrg.mdb.yandexcloud.net:10.128.1.22"
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      KAFKA_CLUSTERS_0_NAME: local-kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29092
 
 
 
