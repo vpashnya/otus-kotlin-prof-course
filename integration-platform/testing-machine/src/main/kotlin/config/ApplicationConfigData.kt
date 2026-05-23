@@ -19,6 +19,7 @@ data class ApplicationConfigData(
   val kafkaGroupId: String,
   val kafkaIPStreamTopicIn: String,
   val kafkaIPStreamTopicOut: String,
+  val urlIpStreamApplication: String,
 ) : ApplicationConfig {
 
   override fun createKafkaConsumer(groupName: String): KafkaConsumer<String, String> {
@@ -52,6 +53,7 @@ fun getApplicationConfig(): ApplicationConfig =
     kafkaGroupId = getRequiredEnv("KAFKA_GROUP_ID"),
     kafkaIPStreamTopicIn = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_IN"),
     kafkaIPStreamTopicOut = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_OUT"),
+    urlIpStreamApplication = getRequiredEnv("KTOR_APP_URL"),
   )
 
 fun getRequiredEnv(name: String): String {

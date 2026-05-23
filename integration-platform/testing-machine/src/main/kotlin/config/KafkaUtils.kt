@@ -16,7 +16,7 @@ fun receiveFromTopic(consumer: Consumer<String, String>, topic: String, logger: 
       var needRead = true
       while (needRead) {
         repeat(15) {
-          val records = consumer.poll(Duration.ofMillis(100)) // Poll for records
+          val records = consumer.poll(Duration.ofMillis(200)) // Poll for records
           for (record in records) {
             add(record.value())
           }

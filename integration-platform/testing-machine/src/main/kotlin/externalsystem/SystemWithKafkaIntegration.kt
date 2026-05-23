@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory
 import ru.pvn.integration.platform.api.v1.models.*
 import ru.pvn.learning.config.ApplicationConfigData
 import ru.pvn.learning.config.receiveFromTopic
+import ru.pvn.learning.testing.machine.externalsystem.KafkaTransportParams
+import ru.pvn.learning.testing.machine.externalsystem.MonolithClasses
+import ru.pvn.learning.testing.machine.externalsystem.MonolithMethods
 import kotlin.random.Random
 
 class SystemWithKafkaIntegration(
@@ -20,25 +23,12 @@ class SystemWithKafkaIntegration(
     .also { it.subscribe(listOf(applicationConfigData.kafkaIPStreamTopicOut)) },
 ) : AutoCloseable {
 
-
-  enum class MonolithClasses {
-    PR_CRED, MAIN_DOCUM, DOCUMENT, KRED_CORP, DEPOSIT_PRIV, DEPOSIT_ORG, BASE_VAL_OP, FOLDER_PAY, COM_STATUS_PRD
-  }
-
-  enum class MonolithMethods {
-    NEW_AUTO, EDIT_AUTO, DELETE_AUTO, LIB, CALC_PARAMS
-  }
-
-  enum class TransportParams {
-    kafka1, kafka2, kafka3
-  }
-
   fun sendFillingMetadataToKafka(): String {
     val streams = buildList {
       MonolithClasses.entries.forEach { cl ->
         MonolithMethods.entries.forEach { mth ->
           if (Random.nextInt(10) < 3) {
-            add(IntegrationStream(cl, mth, TransportParams.entries.random()))
+            add(IntegrationStream(cl, mth, KafkaTransportParams.entries.random()))
           }
         }
       }
@@ -125,7 +115,6 @@ class SystemWithKafkaIntegration(
     return respondText.toString()
 
   }
-
 
   fun disableAllStreams(): String {
     val streamsMetadata = getFullMetadata(streamsProducer, streamsConsumer)
@@ -236,7 +225,7 @@ class SystemWithKafkaIntegration(
   data class IntegrationStream(
     val mClass: MonolithClasses,
     val mMethod: MonolithMethods,
-    val mTransportParams: TransportParams,
+    val mTransportParams: KafkaTransportParams,
   )
 
 }
