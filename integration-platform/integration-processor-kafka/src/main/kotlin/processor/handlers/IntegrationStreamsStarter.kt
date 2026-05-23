@@ -16,6 +16,7 @@ import kotlinx.atomicfu.AtomicBoolean
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -28,6 +29,7 @@ import ru.pvn.learning.processor.config.ApplicationConfig
 import ru.pvn.learning.processor.kafka.processor.metadata.IPStreamRecord
 import ru.pvn.learning.processor.kafka.processor.metadata.MetaDataDownloader
 import java.time.Duration
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.String
 
 interface IntegrationStreamsStarter {
@@ -45,13 +47,14 @@ class IntegrationStreamsStarterImpl(
   },
 ) : IntegrationStreamsStarter, Closeable {
   private var isWork = atomic(true)
+  private val workedStreams: MutableSet<IPStreamRecord> = ConcurrentHashMap.newKeySet()
 
   override fun restart(): Unit = runBlocking {
-    isWork.value = false
     val streams = metadataDownloader.download()
-
-    isWork = atomic(true)
-    streams.forEach { stream ->
+    val streamsToStart = streams - workedStreams
+    workedStreams.addAll(streams)
+    workedStreams.retainAll(streams)
+    streamsToStart.forEach { stream ->
       runStream(isWork, stream)
     }
   }
@@ -63,11 +66,14 @@ class IntegrationStreamsStarterImpl(
     val consumer = config.createKafkaConsumer()
     val producer = config.createKafkaProducer()
 
-    CoroutineScope(Dispatchers.IO).launch {
+    logger.info("creating $consumer")
+    logger.info("creating $producer")
+
+    CoroutineScope(Dispatchers.Default).launch {
       try {
         consumer.subscribe(listOf(topicIn))
-        while (isWork.value) {
-          val records: ConsumerRecords<String, String> = withContext(Dispatchers.IO) {
+        while (isWork.value && ipStream in workedStreams) {
+          val records: ConsumerRecords<String, String> = withContext(Dispatchers.Default) {
             consumer.poll(Duration.ofSeconds(1))
           }
 
@@ -79,12 +85,10 @@ class IntegrationStreamsStarterImpl(
             }
 
             val responseRecord: ProducerRecord<String, String> = ProducerRecord(topicOut, null, monolithResponse.body())
+            producer.send(responseRecord)
 
-            withContext(Dispatchers.IO) {
-              producer.send(responseRecord)
-            }
           }
-
+          delay(1)
         }
       } catch (e: Exception) {
         logger.error("IntegrationStreamsStarter failed : ${e.message}")
@@ -92,6 +96,7 @@ class IntegrationStreamsStarterImpl(
 
       consumer.close()
       producer.close()
+      logger.info("For $ipStream producer and consumer closed!")
     }
     logger.info("Runed thread for $ipStream")
   }

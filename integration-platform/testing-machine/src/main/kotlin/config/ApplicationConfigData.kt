@@ -9,7 +9,7 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
 interface ApplicationConfig {
-  fun createKafkaConsumer(): KafkaConsumer<String, String>
+  fun createKafkaConsumer(subscribeTopic: String): KafkaConsumer<String, String>
   fun createKafkaProducer(): KafkaProducer<String, String>
   fun createIPStreamTopicPair(): TopicPair
 }
@@ -21,10 +21,10 @@ data class ApplicationConfigData(
   val kafkaIPStreamTopicOut: String,
 ) : ApplicationConfig {
 
-  override fun createKafkaConsumer(): KafkaConsumer<String, String> {
+  override fun createKafkaConsumer(groupName: String): KafkaConsumer<String, String> {
     val props = Properties().apply {
       put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts)
-      put(ConsumerConfig.GROUP_ID_CONFIG, kafkaGroupId)
+      put(ConsumerConfig.GROUP_ID_CONFIG, "${kafkaGroupId}-${groupName}")
       put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
       put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
     }
