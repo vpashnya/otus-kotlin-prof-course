@@ -13,7 +13,6 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
-import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import ru.pvn.integration.platform.api.v1.models.StreamAccessibleRequest
@@ -23,13 +22,11 @@ import ru.pvn.integration.platform.api.v1.models.StreamCreateRequest
 import ru.pvn.integration.platform.api.v1.models.StreamDisableRequest
 import ru.pvn.integration.platform.api.v1.models.StreamEnableRequest
 import ru.pvn.learning.config.ApplicationConfigData
-import ru.pvn.learning.config.receiveFromTopic
 import ru.pvn.learning.testing.machine.externalsystem.MonolithClasses
 import ru.pvn.learning.testing.machine.externalsystem.MonolithMethods
 import ru.pvn.learning.testing.machine.externalsystem.RestTransportParams
 import kotlin.collections.forEach
 import kotlin.random.Random
-import kotlin.toString
 
 
 class SystemWithRestIntegration(
