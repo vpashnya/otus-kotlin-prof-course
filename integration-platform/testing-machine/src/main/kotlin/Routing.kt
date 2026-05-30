@@ -51,7 +51,7 @@ fun Application.configureRouting() {
     }
 
     get("sendSyntheticDataForRestStreams") {
-      val respTest = systemWithKafkaIntegration.sendSyntheticDataForStreams()
+      val respTest = systemWithRestIntegration.sendSyntheticDataForStreams()
       call.respond(respTest)
     }
 

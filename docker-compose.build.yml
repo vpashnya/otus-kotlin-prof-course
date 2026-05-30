@@ -27,6 +27,13 @@ services:
       dockerfile: Dockerfile
       target: integration-processor-kafka
 
+  integration-processor-ktor:
+    image: integration-processor-ktor
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: integration-processor-ktor
+
   testing-machine:
     image: testing-machine
     build:

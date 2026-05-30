@@ -170,24 +170,32 @@ class SystemWithKafkaIntegration(
         val streamTopicIn = "${streamTopic}.in"
         val streamTopicOut = "${streamTopic}.out"
         val producer = applicationConfigData.createKafkaProducer()
-        val consumer = applicationConfigData.createKafkaConsumer(streamTopicOut.replace(".", "-"))
         val sendRecord = ProducerRecord<String, String>(
           streamTopicIn,
           null,
           "Some data for ancient monolith ${Random.nextLong(1000000)}"
         )
         producer.send(sendRecord)
-
         producer.flush()
+        producer.close()
+      }
+
+    streamsMetadata.streams
+      ?.filter { it.active == true }
+      ?.forEach { streamsMetadata ->
+        val streamTopic =
+          """${streamsMetadata.transportParams}.${streamsMetadata.classShortName}.${streamsMetadata.methodShortName}""".lowercase()
+        val streamTopicOut = "${streamTopic}.out"
+        val consumer = applicationConfigData.createKafkaConsumer(streamTopicOut.replace(".", "-"))
 
         consumer.subscribe(listOf(streamTopicOut))
         val receiverRecords = receiveFromTopic(consumer, streamTopicOut, logger)
         receiverRecords.forEach {
           respondText.append("receive from $streamTopicOut : $it \n")
         }
-        producer.close()
         consumer.close()
       }
+
 
     return respondText.toString()
   }

@@ -1,4 +1,4 @@
-package ru.pvn.learning.config
+package ru.pvn.learning.processor.config
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -9,24 +9,28 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
 interface ApplicationConfig {
-  fun createKafkaConsumer(subscribeTopic: String): KafkaConsumer<String, String>
+  val kafkaHosts: List<String>
+  val kafkaGroupId: String
+  val kafkaMetaActualizerTopic: String
+  val ipStreamAppKtorUrl: String
+  val ancientMonolithUrl: String
+
+  fun createKafkaConsumer(): KafkaConsumer<String, String>
   fun createKafkaProducer(): KafkaProducer<String, String>
-  fun createIPStreamTopicPair(): TopicPair
 }
 
 data class ApplicationConfigData(
-  val kafkaHosts: List<String>,
-  val kafkaGroupId: String,
-  val kafkaIPStreamTopicIn: String,
-  val kafkaIPStreamTopicOut: String,
-  val urlIpStreamApplication: String,
-  val urlProcessor: String,
+  override val kafkaHosts: List<String>,
+  override val kafkaGroupId: String,
+  override val kafkaMetaActualizerTopic: String,
+  override val ipStreamAppKtorUrl: String,
+  override val ancientMonolithUrl: String,
 ) : ApplicationConfig {
 
-  override fun createKafkaConsumer(groupName: String): KafkaConsumer<String, String> {
+  override fun createKafkaConsumer(): KafkaConsumer<String, String> {
     val props = Properties().apply {
       put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts)
-      put(ConsumerConfig.GROUP_ID_CONFIG, "${kafkaGroupId}-${groupName}")
+      put(ConsumerConfig.GROUP_ID_CONFIG, kafkaGroupId)
       put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
       put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
     }
@@ -41,21 +45,15 @@ data class ApplicationConfigData(
     }
     return KafkaProducer<String, String>(props)
   }
-
-  override fun createIPStreamTopicPair() = TopicPair(
-    incoming = kafkaIPStreamTopicIn,
-    outgoing = kafkaIPStreamTopicOut
-  )
 }
 
 fun getApplicationConfig(): ApplicationConfig =
   ApplicationConfigData(
     kafkaHosts = getRequiredEnv("KAFKA_HOSTS").split("\\s*[,; ]\\s*"),
     kafkaGroupId = getRequiredEnv("KAFKA_GROUP_ID"),
-    kafkaIPStreamTopicIn = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_IN"),
-    kafkaIPStreamTopicOut = getRequiredEnv("KAFKA_IP_STREAM_TOPIC_V1_OUT"),
-    urlIpStreamApplication = getRequiredEnv("KTOR_APP_URL"),
-    urlProcessor = getRequiredEnv("KTOR_PROCESSOR_URL"),
+    kafkaMetaActualizerTopic = getRequiredEnv("KAFKA_META_ACTUALIZER_TOPIC"),
+    ipStreamAppKtorUrl = getRequiredEnv("IP_STREAM_APP_KTOR_URL"),
+    ancientMonolithUrl = getRequiredEnv("ANCIENT_MONOLITH_URL"),
   )
 
 fun getRequiredEnv(name: String): String {

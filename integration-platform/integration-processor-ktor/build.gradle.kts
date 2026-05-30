@@ -13,6 +13,8 @@ application {
 }
 
 dependencies {
+  implementation(libs.kotlinx.atomicfu)
+  implementation(libs.koin.core)
   implementation(libs.ktor.serialization.jackson)
   implementation(libs.ktor.server.content.negotiation)
   implementation(libs.ktor.server.core)
@@ -24,6 +26,7 @@ dependencies {
   implementation(libs.ktor.client.core)
   implementation(libs.ktor.client.okhttp)
   implementation(libs.ktor.client.negotiation)
+  implementation(libs.ktor.client.cio)
   implementation(libs.kafka.client)
 
   implementation(project(":integration-platform-common"))
@@ -41,17 +44,17 @@ tasks.test {
   useJUnitPlatform()
 }
 
-//tasks.withType<Jar> {
-//  manifest {
-//    attributes["Main-Class"] = "ru.pvn.integration.platform.ktor.ApplicationKt"
-//  }
-//
-//  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//
-//  from(sourceSets.main.get().output)
-//
-//  dependsOn(configurations.runtimeClasspath)
-//  from({
-//    configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-//  })
-//}
+tasks.withType<Jar> {
+  manifest {
+    attributes["Main-Class"] = "ru.pvn.ktor.processor.ApplicationKt"
+  }
+
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+  from(sourceSets.main.get().output)
+
+  dependsOn(configurations.runtimeClasspath)
+  from({
+    configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+  })
+}

@@ -5,12 +5,17 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 
 import io.ktor.server.routing.*
+import org.slf4j.LoggerFactory
+
+val logger = LoggerFactory.getLogger("ancient.monolith")
 
 fun Application.configureRouting() {
   routing {
     route("magicgate") {
       post("tooktook") {
-        call.respond(""" <<<${call.receive<String>()}>>> be in ancient monolith, congratulation!!!""")
+        val message = call.receive<String>()
+        logger.info("received : $message")
+        call.respond(""" <<<$message>>> be in ancient monolith, congratulation!!!""")
       }
     }
   }

@@ -15,13 +15,12 @@ fun receiveFromTopic(consumer: Consumer<String, String>, topic: String, logger: 
     try {
       var needRead = true
       while (needRead) {
-        repeat(15) {
-          val records = consumer.poll(Duration.ofMillis(200)) // Poll for records
-          for (record in records) {
-            add(record.value())
-          }
-          needRead = !records.isEmpty || consumer.assignment().isEmpty()
+        val records = consumer.poll(Duration.ofMillis(1000)) // Poll for records
+        for (record in records) {
+          add(record.value())
         }
+        needRead = !records.isEmpty || consumer.assignment().isEmpty()
+
       }
 
     } catch (e: Exception) {

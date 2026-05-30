@@ -10,6 +10,7 @@ dependencies {
   implementation(project(":integration-platform-api-v1-mappers"))
   implementation(libs.kafka.client)
   implementation(libs.coroutines.core)
+  implementation(libs.ktor.serialization.jackson)
   implementation(libs.ktor.client.content.negotiation)
   implementation(libs.ktor.client.cio)
   implementation(libs.ktor.server.core)

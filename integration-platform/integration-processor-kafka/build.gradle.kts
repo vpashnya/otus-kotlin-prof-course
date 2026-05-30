@@ -10,19 +10,18 @@ dependencies {
   implementation(libs.logback.classic)
   implementation(libs.coroutines.core)
   implementation(libs.kotlinx.atomicfu)
-  implementation(project(":integration-platform-common"))
-  implementation(project(":integration-platform-api-v1"))
-  implementation(project(":integration-platform-api-v1-mappers"))
-
   implementation(libs.koin.core)
   implementation(libs.ktor.serialization.json)
   implementation(libs.ktor.client.core)
   implementation(libs.ktor.client.content.negotiation)
   implementation(libs.ktor.client.cio)
 
+  implementation(project(":integration-platform-common"))
+  implementation(project(":integration-platform-api-v1"))
+  implementation(project(":integration-platform-api-v1-mappers"))
+
   testImplementation(libs.koin.test)
   testImplementation(libs.koin.test.junit)
-
   testRuntimeOnly(libs.jupiter.engine)
   testImplementation(libs.jupiter.params)
   testImplementation(libs.jupiter.api)

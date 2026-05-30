@@ -2,6 +2,8 @@ package ru.pvn.learning.tests
 
 import apiV1RequestSerialize
 import apiV1ResponseDeserialize
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.json.JsonMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -21,6 +23,7 @@ import ru.pvn.integration.platform.api.v1.models.StreamCreateObject
 import ru.pvn.integration.platform.api.v1.models.StreamCreateRequest
 import ru.pvn.integration.platform.api.v1.models.StreamDisableRequest
 import ru.pvn.integration.platform.api.v1.models.StreamEnableRequest
+import ru.pvn.integration.platform.api.v1.models.StreamResponseObject
 import ru.pvn.learning.config.ApplicationConfigData
 import ru.pvn.learning.testing.machine.externalsystem.MonolithClasses
 import ru.pvn.learning.testing.machine.externalsystem.MonolithMethods
@@ -28,6 +31,9 @@ import ru.pvn.learning.testing.machine.externalsystem.RestTransportParams
 import kotlin.collections.forEach
 import kotlin.random.Random
 
+val mapper = JsonMapper.builder().run {
+  enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL).build()
+}
 
 class SystemWithRestIntegration(
   private val applicationConfigData: ApplicationConfigData,
@@ -43,7 +49,7 @@ class SystemWithRestIntegration(
       MonolithClasses.entries.forEach { cl ->
         MonolithMethods.entries.forEach { mth ->
           if (Random.nextInt(10) < 3) {
-            add(IntegrationStream(cl, mth, RestTransportParams.entries.random()))
+            add(IntegrationStreamCases(cl, mth, RestTransportParams.entries.random()))
           }
         }
       }
@@ -125,18 +131,35 @@ class SystemWithRestIntegration(
     return@runBlocking respondText.toString()
   }
 
-
-  fun sendSyntheticDataForStreams(): String {
+  fun sendSyntheticDataForStreams(): String = runBlocking {
     val streamsMetadata = getFullMetadata()
 
     val respondText = StringBuilder()
     respondText.append("send to random streams:\n")
 
-    TODO("ДОПИЛИТЬ ОТПРАВКУ ДАННЫХ В KTOR-PROCESSOR")
 
-    return respondText.toString()
+    val responds = streamsMetadata
+      .streams
+      ?.filter { it.transportParams?.contains("rest") == true }
+      ?.map { stream ->
+
+        val response = httpClient.post(applicationConfigData.urlProcessor) {
+          method = HttpMethod.Post
+          contentType(ContentType.Application.Json)
+          setBody(
+            mapper.writeValueAsString(
+              MessageToAncient(
+                ipStream = stream.toIpStream(),
+                message = "info for ancient monolith",
+              )
+            )
+          )
+        }
+        response.body<String>()
+      }
+
+    return@runBlocking respondText.toString()
   }
-
 
   private fun getFullMetadata(): StreamAccessibleResponse = runBlocking {
     val response = httpClient.post("${applicationConfigData.urlIpStreamApplication}/v1/ip/stream/accessible") {
@@ -152,9 +175,27 @@ class SystemWithRestIntegration(
     httpClient.close()
   }
 
-  data class IntegrationStream(
+  fun StreamResponseObject.toIpStream() =
+    IPStream(
+      classShortName = classShortName ?: "error",
+      methodShortName = methodShortName ?: "error",
+      transportParams = transportParams ?: "error",
+    )
+
+  data class IntegrationStreamCases(
     val mClass: MonolithClasses,
     val mMethod: MonolithMethods,
     val mTransportParams: RestTransportParams,
+  )
+
+  data class IPStream(
+    val classShortName: String,
+    val methodShortName: String,
+    val transportParams: String,
+  )
+
+  data class MessageToAncient(
+    val ipStream: IPStream,
+    val message: String,
   )
 }

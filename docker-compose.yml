@@ -1,4 +1,26 @@
 services:
+  processor-ktor:
+    image: integration-processor-ktor:latest
+    ports:
+      - "9008:9999"
+    depends_on:
+      kafka1:
+        condition: service_started
+      kafka-ui:
+        condition: service_started
+      pgdb:
+        condition: service_healthy
+      ancient-monolith:
+        condition: service_started
+      app-ktor:
+        condition: service_healthy
+    environment:
+      KAFKA_HOSTS: "kafka1:29092"
+      KAFKA_GROUP_ID: "integration-processor-kafka"
+      KAFKA_META_ACTUALIZER_TOPIC: "metadata.actualizer"
+      IP_STREAM_APP_KTOR_URL: "http://otus-kotlin-prof-course-app-ktor-1:8080/v1/ip/stream"
+      ANCIENT_MONOLITH_URL: "http://ancient-monolith:9999/magicgate/tooktook"
+
   processor-kafka:
     image: integration-processor-kafka:latest
     depends_on:
@@ -93,6 +115,8 @@ services:
         condition: service_started
       processor-kafka:
         condition: service_started
+      processor-ktor:
+        condition: service_started
       pgdb:
         condition: service_healthy
     environment:
@@ -101,7 +125,6 @@ services:
       KAFKA_IP_STREAM_TOPIC_V1_IN: "ip.stream.v1.in"
       KAFKA_IP_STREAM_TOPIC_V1_OUT: "ip.stream.v1.out"
       KTOR_APP_URL: "http://app-ktor:8080"
-
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.7

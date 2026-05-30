@@ -62,8 +62,8 @@ COPY integration-platform/integration-platform-app-ktor/src ./integration-platfo
 COPY integration-platform/integration-processor-kafka/build.gradle.kts ./integration-platform/integration-processor-kafka/build.gradle.kts
 COPY integration-platform/integration-processor-kafka/src ./integration-platform/integration-processor-kafka/src
 
-
-
+COPY integration-platform/integration-processor-ktor/build.gradle.kts ./integration-platform/integration-processor-ktor/build.gradle.kts
+COPY integration-platform/integration-processor-ktor/src ./integration-platform/integration-processor-ktor/src
 
 COPY integration-platform/testing-machine/build.gradle.kts ./integration-platform/testing-machine/build.gradle.kts
 COPY integration-platform/testing-machine/src ./integration-platform/testing-machine/src
@@ -81,6 +81,7 @@ RUN ./gradlew --no-daemon integration-platform:integration-platform-repo-pg:buil
 RUN ./gradlew --no-daemon integration-platform:integration-platform-app-kafka:build
 RUN ./gradlew --no-daemon integration-platform:integration-platform-app-ktor:build
 RUN ./gradlew --no-daemon integration-platform:integration-processor-kafka:build
+RUN ./gradlew --no-daemon integration-platform:integration-processor-ktor:build
 RUN ./gradlew --no-daemon integration-platform:testing-machine:build
 
 FROM ${RUNTIME_IMG} AS ancient-monolith
@@ -104,6 +105,10 @@ WORKDIR /opt/app
 COPY --from=builder /app/integration-platform/integration-processor-kafka/build/libs/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 
+FROM ${RUNTIME_IMG} AS integration-processor-ktor
+WORKDIR /opt/app
+COPY --from=builder /app/integration-platform/integration-processor-ktor/build/libs/*.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 FROM ${RUNTIME_IMG} AS testing-machine
 WORKDIR /opt/app
