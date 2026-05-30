@@ -32,11 +32,7 @@ dependencies {
 
   implementation(kotlin("test-junit"))
 
-  implementation("org.apache.kafka:kafka-clients:3.9.1")
-  implementation("org.slf4j:slf4j-reload4j:2.0.17")
-  implementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-  implementation("org.junit.platform:junit-platform-launcher:1.10.2")
-  runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+  testRuntimeOnly(libs.jupiter.engine)
 }
 
 tasks.test {
@@ -45,7 +41,7 @@ tasks.test {
 
 tasks.withType<Jar> {
   manifest {
-    attributes["Main-Class"] = "ru.pvn.learning.MainKt"
+    attributes["Main-Class"] = "ru.pvn.learning.testing.machine.ApplicationKt"
   }
 
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE

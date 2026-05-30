@@ -108,6 +108,8 @@ services:
 
   testing-machine:
     image: testing-machine:latest
+    ports:
+      - "9007:9990"
     depends_on:
       app-ktor:
         condition: service_healthy
@@ -124,7 +126,8 @@ services:
       KAFKA_GROUP_ID: "testing-machine"
       KAFKA_IP_STREAM_TOPIC_V1_IN: "ip.stream.v1.in"
       KAFKA_IP_STREAM_TOPIC_V1_OUT: "ip.stream.v1.out"
-      KTOR_APP_URL: "http://app-ktor:8080"
+      KTOR_APP_URL: "http://otus-kotlin-prof-course-app-ktor-1:8080"
+      KTOR_PROCESSOR_URL: "http://otus-kotlin-prof-course-processor-ktor-1:9999"
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.7

@@ -133,30 +133,29 @@ class SystemWithRestIntegration(
 
   fun sendSyntheticDataForStreams(): String = runBlocking {
     val streamsMetadata = getFullMetadata()
-
     val respondText = StringBuilder()
     respondText.append("send to random streams:\n")
-
 
     val responds = streamsMetadata
       .streams
       ?.filter { it.transportParams?.contains("rest") == true }
       ?.map { stream ->
-
+        val messageToAncient = MessageToAncient(
+          ipStream = stream.toIpStream(),
+          message = "info for ancient monolith",
+        )
+        logger.info("send $messageToAncient")
         val response = httpClient.post(applicationConfigData.urlProcessor) {
           method = HttpMethod.Post
           contentType(ContentType.Application.Json)
-          setBody(
-            mapper.writeValueAsString(
-              MessageToAncient(
-                ipStream = stream.toIpStream(),
-                message = "info for ancient monolith",
-              )
-            )
-          )
+          setBody(mapper.writeValueAsString(messageToAncient))
         }
         response.body<String>()
       }
+
+    responds?.forEach {
+      respondText.append("$it \n")
+    }
 
     return@runBlocking respondText.toString()
   }
