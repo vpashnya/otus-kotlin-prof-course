@@ -20,6 +20,12 @@ services:
       KAFKA_META_ACTUALIZER_TOPIC: "metadata.actualizer"
       IP_STREAM_APP_KTOR_URL: "http://otus-kotlin-prof-course-app-ktor-1:8080/v1/ip/stream"
       ANCIENT_MONOLITH_URL: "http://ancient-monolith:9999/magicgate/tooktook"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "app-processor-ktor"
+
 
   processor-kafka:
     image: integration-processor-kafka:latest
@@ -40,6 +46,11 @@ services:
       KAFKA_META_ACTUALIZER_TOPIC: "metadata.actualizer"
       IP_STREAM_APP_KTOR_URL: "http://otus-kotlin-prof-course-app-ktor-1:8080/v1/ip/stream"
       ANCIENT_MONOLITH_URL: "http://ancient-monolith:9999/magicgate/tooktook"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "app-processor-kafka"
 
   app-ktor:
     image: integration-platform-app-ktor:latest
@@ -68,6 +79,11 @@ services:
       PG_MINIMUM_IDLE: "5"
       PG_IDLE_TIMEOUT: "60000"
       PG_CONNECTION_TIMEOUT: "30000"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "app-steam-ktor"
 
   app-kafka:
     image: integration-platform-app-kafka:latest
@@ -96,6 +112,11 @@ services:
       PG_MINIMUM_IDLE: "5"
       PG_IDLE_TIMEOUT: "60000"
       PG_CONNECTION_TIMEOUT: "30000"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "app-steam-kafka"
 
   ancient-monolith:
     image: ancient-monolith:latest
@@ -105,6 +126,11 @@ services:
     depends_on:
       pgdb:
         condition: service_healthy
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "app-ancient-monolith"
 
   testing-machine:
     image: testing-machine:latest
@@ -134,6 +160,12 @@ services:
       KAFKA_IP_STREAM_TOPIC_V1_OUT: "ip.stream.v1.out"
       KTOR_APP_URL: "http://otus-kotlin-prof-course-app-ktor-1:8080"
       KTOR_PROCESSOR_URL: "http://otus-kotlin-prof-course-processor-ktor-1:9999"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: "localhost:24224"
+        tag: "app-testing-machine"
+
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.7
