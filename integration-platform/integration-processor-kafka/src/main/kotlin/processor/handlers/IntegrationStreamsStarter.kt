@@ -40,6 +40,7 @@ class IntegrationStreamsStarterImpl(
   private val config: ApplicationConfig,
   private val metadataDownloader: MetaDataDownloader,
   private val logger: Logger = LoggerFactory.getLogger(IntegrationStreamsStarterImpl::class.java),
+  private val statLogger: Logger = LoggerFactory.getLogger("stat.logger"),
   private val httpClient: HttpClient = HttpClient(CIO) {
     install(ContentNegotiation) {
       json()
@@ -87,6 +88,7 @@ class IntegrationStreamsStarterImpl(
             val responseRecord: ProducerRecord<String, String> = ProducerRecord(topicOut, null, monolithResponse.body())
             producer.send(responseRecord)
 
+            statLogger.info("successful $ipStream")
           }
           delay(1)
         }
@@ -96,7 +98,6 @@ class IntegrationStreamsStarterImpl(
 
       consumer.close()
       producer.close()
-      logger.info("For $ipStream producer and consumer closed!")
     }
     logger.info("Runed thread for $ipStream")
   }

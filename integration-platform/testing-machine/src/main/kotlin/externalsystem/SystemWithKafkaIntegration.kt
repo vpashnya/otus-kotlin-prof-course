@@ -17,17 +17,18 @@ import kotlin.random.Random
 
 class SystemWithKafkaIntegration(
   private val applicationConfigData: ApplicationConfigData,
+  private val statLogger: Logger = LoggerFactory.getLogger("send.requests"),
   private val logger: Logger = LoggerFactory.getLogger("SystemWithKafkaIntegration"),
   private val streamsProducer: Producer<String, String> = applicationConfigData.createKafkaProducer(),
   private val streamsConsumer: Consumer<String, String> = applicationConfigData.createKafkaConsumer("ip-stream")
     .also { it.subscribe(listOf(applicationConfigData.kafkaIPStreamTopicOut)) },
 ) : AutoCloseable {
 
-  fun sendFillingMetadataToKafka(): String {
+  fun sendFillingMetadataToKafka(waitResponse: Boolean = true): String {
     val streams = buildList {
       MonolithClasses.entries.forEach { cl ->
         MonolithMethods.entries.forEach { mth ->
-          if (Random.nextInt(10) < 3) {
+          if (Random.nextInt(30) < 3) {
             add(IntegrationStream(cl, mth, KafkaTransportParams.entries.random()))
           }
         }
@@ -60,21 +61,22 @@ class SystemWithKafkaIntegration(
       }
     }
     streamsProducer.flush()
+    statLogger.info("Sends createRandomKafkaStreams!")
 
+    return if (waitResponse) {
+      val respondText = StringBuilder()
+      respondText.append("created random streams:\n")
 
-    val respondText = StringBuilder()
-    respondText.append("created random streams:\n")
-
-    receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
-      .forEach { resp ->
-        respondText.append("$resp \n")
-      }
-
-    return respondText.toString()
+      receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
+        .forEach { resp ->
+          respondText.append("$resp \n")
+        }
+      respondText.toString()
+    } else ""
 
   }
 
-  fun enableRandomStreams(): String {
+  fun enableRandomStreams(waitResponse: Boolean = true): String {
     val streamsMetadata = getFullMetadata(streamsProducer, streamsConsumer)
     val sendRecords = buildList {
       streamsMetadata
@@ -104,19 +106,23 @@ class SystemWithKafkaIntegration(
     }
     streamsProducer.flush()
 
-    val respondText = StringBuilder()
-    respondText.append("enabled random streams:\n")
+    statLogger.info("Sends enableRandomKafkaStreams!")
 
-    receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
-      .forEach { resp ->
-        respondText.append("$resp \n")
-      }
+    return if (waitResponse) {
+      val respondText = StringBuilder()
+      respondText.append("enabled random streams:\n")
 
-    return respondText.toString()
+      receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
+        .forEach { resp ->
+          respondText.append("$resp \n")
+        }
+
+      respondText.toString()
+    } else ""
 
   }
 
-  fun disableAllStreams(): String {
+  fun disableAllStreams(waitResponse: Boolean = true): String {
     val streamsMetadata = getFullMetadata(streamsProducer, streamsConsumer)
     val sendRecords = buildList {
       streamsMetadata
@@ -144,19 +150,22 @@ class SystemWithKafkaIntegration(
     }
     streamsProducer.flush()
 
-    val respondText = StringBuilder()
-    respondText.append("Disabled streams:\n")
+    statLogger.info("Sends disableAllKafkaStreams!")
 
-    receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
-      .forEach { resp ->
-        respondText.append("$resp \n")
-      }
+    return if (waitResponse) {
+      val respondText = StringBuilder()
+      respondText.append("Disabled streams:\n")
 
-    return respondText.toString()
+      receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
+        .forEach { resp ->
+          respondText.append("$resp \n")
+        }
+      respondText.toString()
+    } else ""
 
   }
 
-  fun sendSyntheticDataForStreams(): String {
+  fun sendSyntheticDataForStreams(waitResponse: Boolean = true): String {
     val streamsMetadata = getFullMetadata(streamsProducer, streamsConsumer)
 
     val respondText = StringBuilder()
@@ -180,24 +189,26 @@ class SystemWithKafkaIntegration(
         producer.close()
       }
 
-    streamsMetadata.streams
-      ?.filter { it.active == true }
-      ?.forEach { streamsMetadata ->
-        val streamTopic =
-          """${streamsMetadata.transportParams}.${streamsMetadata.classShortName}.${streamsMetadata.methodShortName}""".lowercase()
-        val streamTopicOut = "${streamTopic}.out"
-        val consumer = applicationConfigData.createKafkaConsumer(streamTopicOut.replace(".", "-"))
+    statLogger.info("Sends sendSyntheticDataForKafkaStreams!")
+    return if (waitResponse) {
+      streamsMetadata.streams
+        ?.filter { it.active == true }
+        ?.forEach { streamsMetadata ->
+          val streamTopic =
+            """${streamsMetadata.transportParams}.${streamsMetadata.classShortName}.${streamsMetadata.methodShortName}""".lowercase()
+          val streamTopicOut = "${streamTopic}.out"
+          val consumer = applicationConfigData.createKafkaConsumer(streamTopicOut.replace(".", "-"))
 
-        consumer.subscribe(listOf(streamTopicOut))
-        val receiverRecords = receiveFromTopic(consumer, streamTopicOut, logger)
-        receiverRecords.forEach {
-          respondText.append("receive from $streamTopicOut : $it \n")
+          consumer.subscribe(listOf(streamTopicOut))
+          val receiverRecords = receiveFromTopic(consumer, streamTopicOut, logger)
+          receiverRecords.forEach {
+            respondText.append("receive from $streamTopicOut : $it \n")
+          }
+          consumer.close()
         }
-        consumer.close()
-      }
+      return respondText.toString()
+    } else ""
 
-
-    return respondText.toString()
   }
 
 

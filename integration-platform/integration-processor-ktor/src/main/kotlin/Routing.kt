@@ -17,6 +17,8 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
 import org.koin.java.KoinJavaComponent.inject
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import ru.pvn.ktor.processor.processor.metadata.IPStreamRecord
 import ru.pvn.ktor.processor.processor.metadata.lowercase
 import ru.pvn.learning.processor.config.ApplicationConfig
@@ -29,6 +31,7 @@ fun Application.configureRouting() {
   WorkIPStreams.actualize()
   val httpClient: HttpClient by inject(HttpClient::class.java)
   val applicationConfigData: ApplicationConfig by inject(ApplicationConfig::class.java)
+  val statLogger: Logger = LoggerFactory.getLogger("stat.logger")
 
   routing {
     install(ContentNegotiation) {
@@ -48,8 +51,11 @@ fun Application.configureRouting() {
           }
           call.respond(monolithResponse.body<String>())
 
+          statLogger.info("successful ${messageToAncient.ipStream.lowercase()}")
+
         } else {
           call.respond("${messageToAncient.ipStream} not work!")
+          statLogger.info("fail ${messageToAncient.ipStream.lowercase()}")
 
         }
       }

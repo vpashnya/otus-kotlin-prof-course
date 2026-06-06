@@ -37,6 +37,7 @@ val mapper = JsonMapper.builder().run {
 
 class SystemWithRestIntegration(
   private val applicationConfigData: ApplicationConfigData,
+  private val statLogger: Logger = LoggerFactory.getLogger("send.requests"),
   private val logger: Logger = LoggerFactory.getLogger("SystemWithRestIntegration"),
   private val httpClient: HttpClient = HttpClient(CIO) {
     install(ContentNegotiation) {
@@ -48,7 +49,7 @@ class SystemWithRestIntegration(
     val streams = buildList {
       MonolithClasses.entries.forEach { cl ->
         MonolithMethods.entries.forEach { mth ->
-          if (Random.nextInt(10) < 3) {
+          if (Random.nextInt(30) < 3) {
             add(IntegrationStreamCases(cl, mth, RestTransportParams.entries.random()))
           }
         }
@@ -82,6 +83,8 @@ class SystemWithRestIntegration(
       respondText.append("$respond \n")
     }
 
+    statLogger.info("Sends createRandomRestStreams!")
+
     return respondText.toString()
   }
 
@@ -104,7 +107,7 @@ class SystemWithRestIntegration(
     responds?.forEach { respond ->
       respondText.append("$respond \n")
     }
-
+    statLogger.info("Sends enableRandomRestStreams!")
     return@runBlocking respondText.toString()
   }
 
@@ -127,7 +130,7 @@ class SystemWithRestIntegration(
     responds?.forEach { respond ->
       respondText.append("$respond \n")
     }
-
+    statLogger.info("Sends disableAllRestStreams!")
     return@runBlocking respondText.toString()
   }
 
@@ -156,6 +159,7 @@ class SystemWithRestIntegration(
     responds?.forEach {
       respondText.append("$it \n")
     }
+    statLogger.info("Sends sendSyntheticDataForRestStreams!")
 
     return@runBlocking respondText.toString()
   }
