@@ -18,7 +18,7 @@ import ru.pvn.integration.platform.api.v1.models.StreamAccessibleResponse
 import kotlin.String
 
 interface MetaDataDownloader {
-  suspend fun download(): Set<IPStreamRecord>
+  suspend fun download(): Map<IPStreamRecord, Boolean>
 }
 
 class MetaDataDownloaderImpl(
@@ -30,7 +30,7 @@ class MetaDataDownloaderImpl(
   },
 ) : MetaDataDownloader {
 
-  override suspend fun download(): Set<IPStreamRecord> {
+  override suspend fun download(): Map<IPStreamRecord, Boolean> {
     val request = StreamAccessibleRequest(requestType = "accessible")
     val url = "${ipStreamAppKtorUrl}/accessible"
     val response: HttpResponse = httpClient.post(url) {
@@ -43,18 +43,18 @@ class MetaDataDownloaderImpl(
       (apiV1ResponseDeserialize(response.body()) as StreamAccessibleResponse)
         .streams
         ?.let {
-          it.asSequence()
-            .filter { stream -> stream.active == true }
+          it
+            .asSequence()
             .mapNotNull { metaDataRecord ->
               IPStreamRecord(
                 classShortName = metaDataRecord.classShortName?.lowercase() ?: return@mapNotNull null,
                 methodShortName = metaDataRecord.methodShortName?.lowercase() ?: return@mapNotNull null,
                 transportParams = metaDataRecord.transportParams?.lowercase() ?: return@mapNotNull null,
-              )
+              ) to (metaDataRecord.active ?: false)
             }
             .distinct()
-            .toSet()
-        } ?: emptySet()
+            .toMap()
+        } ?: emptyMap()
 
     return ipStreamRecords
   }

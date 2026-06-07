@@ -10,6 +10,6 @@ fun initApplicationSettings(applicationConfig: ApplicationConfig): ApplicationSe
   applicationConfig as ApplicationConfigData
 
   return ApplicationSettings(
-    metaDataActualizerConsumer = applicationConfig.createKafkaConsumer()
+    metaDataActualizerConsumer = applicationConfig.createKafkaConsumer("METADATA_CONSUMER")
   )
 }

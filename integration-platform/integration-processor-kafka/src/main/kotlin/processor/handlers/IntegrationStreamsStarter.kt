@@ -48,58 +48,63 @@ class IntegrationStreamsStarterImpl(
   },
 ) : IntegrationStreamsStarter, Closeable {
   private var isWork = atomic(true)
-  private val workedStreams: MutableSet<IPStreamRecord> = ConcurrentHashMap.newKeySet()
+  private val allStreams = ConcurrentHashMap<IPStreamRecord, Boolean>()
+  private val workingCoroutines = mutableSetOf<IPStreamRecord>()
 
   override fun restart(): Unit = runBlocking {
-    val streams = metadataDownloader.download()
-    val streamsToStart = streams - workedStreams
-    workedStreams.addAll(streams)
-    workedStreams.retainAll(streams)
-    streamsToStart.forEach { stream ->
-      runStream(isWork, stream)
-    }
+    allStreams.putAll(metadataDownloader.download())
+    allStreams.forEach { (stream, _) -> runStream(isWork, stream) }
+
   }
 
   private fun runStream(isWork: AtomicBoolean, ipStream: IPStreamRecord) = runBlocking {
-    val topicIn = ipStream.topicIn()
-    val topicOut = ipStream.topicOut()
+    if (ipStream !in workingCoroutines) {
+      workingCoroutines.add(ipStream)
+      CoroutineScope(Dispatchers.Default).launch {
+        val topicIn = ipStream.topicIn()
+        val topicOut = ipStream.topicOut()
 
-    val consumer = config.createKafkaConsumer()
-    val producer = config.createKafkaProducer()
+        val consumer = config.createKafkaConsumer(ipStream.groupIdSuffix())
+        val producer = config.createKafkaProducer()
 
-    logger.info("creating $consumer")
-    logger.info("creating $producer")
+        logger.info("creating $consumer")
+        logger.info("creating $producer")
 
-    CoroutineScope(Dispatchers.Default).launch {
-      try {
-        consumer.subscribe(listOf(topicIn))
-        while (isWork.value && ipStream in workedStreams) {
-          val records: ConsumerRecords<String, String> = withContext(Dispatchers.Default) {
-            consumer.poll(Duration.ofSeconds(1))
-          }
-
-          records.forEach { record: ConsumerRecord<String, String> ->
-            val monolithResponse: HttpResponse = httpClient.post(config.ancientMonolithUrl) {
-              method = HttpMethod.Post
-              contentType(ContentType.Application.Json)
-              setBody(record.value())
+        try {
+          consumer.subscribe(listOf(topicIn))
+          while (isWork.value) {
+            val records: ConsumerRecords<String, String> = withContext(Dispatchers.Default) {
+              consumer.poll(Duration.ofSeconds(1))
             }
 
-            val responseRecord: ProducerRecord<String, String> = ProducerRecord(topicOut, null, monolithResponse.body())
-            producer.send(responseRecord)
+            records.forEach { record: ConsumerRecord<String, String> ->
+              if (allStreams[ipStream] == true) {
+                val monolithResponse: HttpResponse = httpClient.post(config.ancientMonolithUrl) {
+                  method = HttpMethod.Post
+                  contentType(ContentType.Application.Json)
+                  setBody(record.value())
+                }
+                val responseRecord: ProducerRecord<String, String> =
+                  ProducerRecord(topicOut, null, monolithResponse.body())
+                producer.send(responseRecord)
+                statLogger.info("successful $ipStream")
+              } else {
+                val responseRecord: ProducerRecord<String, String> = ProducerRecord(topicOut, null, "fail sent to ancient monolith")
+                producer.send(responseRecord)
+                statLogger.info("fail $ipStream")
+              }
 
-            statLogger.info("successful $ipStream")
+            }
+            delay(1)
           }
-          delay(1)
+        } catch (e: Exception) {
+          logger.error("IntegrationStreamsStarter failed : ${e.message}")
         }
-      } catch (e: Exception) {
-        logger.error("IntegrationStreamsStarter failed : ${e.message}")
+        consumer.close()
+        producer.close()
       }
-
-      consumer.close()
-      producer.close()
+      logger.info("Runed thread for $ipStream")
     }
-    logger.info("Runed thread for $ipStream")
   }
 
   override fun close() {

@@ -15,7 +15,7 @@ interface ApplicationConfig {
   val ipStreamAppKtorUrl: String
   val ancientMonolithUrl: String
 
-  fun createKafkaConsumer(): KafkaConsumer<String, String>
+  fun createKafkaConsumer(name: String): KafkaConsumer<String, String>
   fun createKafkaProducer(): KafkaProducer<String, String>
 }
 
@@ -27,10 +27,10 @@ data class ApplicationConfigData(
   override val ancientMonolithUrl: String,
 ) : ApplicationConfig {
 
-  override fun createKafkaConsumer(): KafkaConsumer<String, String> {
+  override fun createKafkaConsumer(name: String): KafkaConsumer<String, String> {
     val props = Properties().apply {
       put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHosts)
-      put(ConsumerConfig.GROUP_ID_CONFIG, kafkaGroupId)
+      put(ConsumerConfig.GROUP_ID_CONFIG, "${kafkaGroupId}_${name}")
       put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
       put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
     }

@@ -24,7 +24,7 @@ fun main() {
     module(createdAtStart = true) {
       single<ApplicationConfig> { getApplicationConfig() }
       single<ApplicationSettings> { initApplicationSettings(get()) }
-      single<KafkaConsumer<String, String>>(named("METADATA_CONSUMER")) { get<ApplicationConfig>().createKafkaConsumer() }
+      single<KafkaConsumer<String, String>>(named("METADATA_CONSUMER")) { get<ApplicationConfig>().createKafkaConsumer("METADATA_CONSUMER") }
       single<MetaDataDownloader> {
         MetaDataDownloaderImpl(
           ipStreamAppKtorUrl = (get<ApplicationConfig>() as ApplicationConfigData).ipStreamAppKtorUrl
