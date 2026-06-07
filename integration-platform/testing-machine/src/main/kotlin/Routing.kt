@@ -31,6 +31,11 @@ fun Application.configureRouting() {
       call.respond(respTest)
     }
 
+    get("enableAllKafkaStreams") {
+      val respTest = systemWithKafkaIntegration.enableAllStreams()
+      call.respond(respTest)
+    }
+
     get("disableAllKafkaStreams") {
       val respTest = systemWithKafkaIntegration.disableAllStreams()
       call.respond(respTest)
@@ -51,6 +56,11 @@ fun Application.configureRouting() {
       call.respond(respTest)
     }
 
+    get("enableAllRestStreams") {
+      val respTest = systemWithRestIntegration.enableAllStreams()
+      call.respond(respTest)
+    }
+
     get("disableAllRestStreams") {
       val respTest = systemWithRestIntegration.disableAllStreams()
       call.respond(respTest)
@@ -66,16 +76,8 @@ fun Application.configureRouting() {
       runBlocking {
         CoroutineScope(Dispatchers.Default).launch {
           systemWithKafkaIntegration.apply {
-            repeat(10) {
-              sendFillingMetadataToKafka()
-              delay(100)
-              enableRandomStreams()
-              delay(100)
-              repeat(100) {
-                sendSyntheticDataForStreams(false)
-              }
-              sendSyntheticDataForStreams()
-              disableAllStreams()
+            repeat(1000) {
+              sendSyntheticDataForStreams(false)
               delay(100)
             }
           }
@@ -85,16 +87,8 @@ fun Application.configureRouting() {
       runBlocking {
         CoroutineScope(Dispatchers.Default).launch {
           systemWithRestIntegration.apply {
-            repeat(10) {
-              sendFillingMetadataToRest()
-              delay(100)
-              enableRandomStreams()
-              delay(100)
-              repeat(100) {
-                sendSyntheticDataForStreams()
-                delay(500)
-              }
-              disableAllStreams()
+            repeat(1000) {
+              sendSyntheticDataForStreams()
               delay(100)
             }
           }
@@ -102,7 +96,5 @@ fun Application.configureRouting() {
       }
 
     }
-
-
   }
 }

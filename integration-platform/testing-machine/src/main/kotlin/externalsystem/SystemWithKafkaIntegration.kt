@@ -111,16 +111,56 @@ class SystemWithKafkaIntegration(
     return if (waitResponse) {
       val respondText = StringBuilder()
       respondText.append("enabled random streams:\n")
-
       receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
         .forEach { resp ->
           respondText.append("$resp \n")
         }
-
       respondText.toString()
     } else ""
-
   }
+
+
+  fun enableAllStreams(waitResponse: Boolean = true): String {
+    val streamsMetadata = getFullMetadata(streamsProducer, streamsConsumer)
+    val sendRecords = buildList {
+      streamsMetadata
+        .streams
+        ?.filter { it.transportParams?.contains("kafka") == true }
+        ?.forEach { stream ->
+            add(
+              ProducerRecord<String, String>(
+                applicationConfigData.kafkaIPStreamTopicIn,
+                null,
+                apiV1RequestSerialize(StreamEnableRequest(streamId = stream.id, version = stream.version))
+              )
+            )
+            logger.info("enabled $stream")
+        }
+    }
+
+    sendRecords.forEach { record ->
+      streamsProducer.send(record) { metadata, exception ->
+        if (exception == null)
+          logger.info("Sent: $record with offset ${metadata.offset()}")
+        else
+          logger.info(exception.toString())
+      }
+    }
+    streamsProducer.flush()
+
+    statLogger.info("Sends enableAllKafkaStreams!")
+
+    return if (waitResponse) {
+      val respondText = StringBuilder()
+      respondText.append("enabled all streams:\n")
+      receiveFromTopic(streamsConsumer, applicationConfigData.kafkaIPStreamTopicOut, logger)
+        .forEach { resp ->
+          respondText.append("$resp \n")
+        }
+      respondText.toString()
+    } else ""
+  }
+
 
   fun disableAllStreams(waitResponse: Boolean = true): String {
     val streamsMetadata = getFullMetadata(streamsProducer, streamsConsumer)
@@ -172,6 +212,7 @@ class SystemWithKafkaIntegration(
     respondText.append("send to  random streams:\n")
 
     streamsMetadata.streams
+      ?.filter { it.transportParams?.contains("kafka") == true }
       ?.filter { Random.nextBoolean() }
       ?.forEach { streamsMetadata ->
         val streamTopic = """${streamsMetadata.transportParams}.${streamsMetadata.classShortName}.${streamsMetadata.methodShortName}""".lowercase()

@@ -111,6 +111,29 @@ class SystemWithRestIntegration(
     return@runBlocking respondText.toString()
   }
 
+  fun enableAllStreams(): String = runBlocking {
+    val streamsMetadata = getFullMetadata()
+    val responds = streamsMetadata
+      .streams
+      ?.filter { it.transportParams?.contains("rest") == true}
+      ?.map { stream ->
+        val response = httpClient.post("${applicationConfigData.urlIpStreamApplication}/v1/ip/stream/enable") {
+          method = HttpMethod.Post
+          contentType(ContentType.Application.Json)
+          setBody(apiV1RequestSerialize(StreamEnableRequest(streamId = stream.id, version = stream.version)))
+        }
+        response.body<String>()
+      }
+
+    val respondText = StringBuilder()
+    respondText.append("enabled random streams:\n")
+    responds?.forEach { respond ->
+      respondText.append("$respond \n")
+    }
+    statLogger.info("Sends enableAllStreams!")
+    return@runBlocking respondText.toString()
+  }
+
   fun disableAllStreams(): String = runBlocking {
     val streamsMetadata = getFullMetadata()
     val responds = streamsMetadata
