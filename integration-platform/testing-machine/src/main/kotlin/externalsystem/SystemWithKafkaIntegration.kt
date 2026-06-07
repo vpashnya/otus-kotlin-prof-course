@@ -172,10 +172,9 @@ class SystemWithKafkaIntegration(
     respondText.append("send to  random streams:\n")
 
     streamsMetadata.streams
-      ?.filter { it.active == true }
+      ?.filter { Random.nextBoolean() }
       ?.forEach { streamsMetadata ->
-        val streamTopic =
-          """${streamsMetadata.transportParams}.${streamsMetadata.classShortName}.${streamsMetadata.methodShortName}""".lowercase()
+        val streamTopic = """${streamsMetadata.transportParams}.${streamsMetadata.classShortName}.${streamsMetadata.methodShortName}""".lowercase()
         val streamTopicIn = "${streamTopic}.in"
         val streamTopicOut = "${streamTopic}.out"
         val producer = applicationConfigData.createKafkaProducer()
@@ -187,6 +186,7 @@ class SystemWithKafkaIntegration(
         producer.send(sendRecord)
         producer.flush()
         producer.close()
+
       }
 
     statLogger.info("Sends sendSyntheticDataForKafkaStreams!")
