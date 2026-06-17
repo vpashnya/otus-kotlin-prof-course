@@ -1,0 +1,6 @@
+ktor:
+  application:
+    modules:
+      - ru.pvn.learning.testing.machine.RoutingKt.configureRouting
+  deployment:
+    port: 9990

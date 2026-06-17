@@ -39,6 +39,7 @@ suspend inline fun <reified Q : IRequest, reified R : IResponse> ApplicationCall
 ) {
   val context = IPContext(
     streamRepo = applicationSettings.ipStreamRepo,
+    metadataActualizer = applicationSettings.metadataActualizer,
     workMode = when (applicationSettings.mode) {
       Mode.PROD -> IPWorkMode.PROD
       Mode.STUB -> IPWorkMode.STUB

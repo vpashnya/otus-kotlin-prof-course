@@ -44,10 +44,11 @@ class RequestV1SerializationTests {
           classShortName = "CLIENT",
           methodShortName = "EXPORT2FNS",
           transportParams = "some transport",
-          description = "Отправка информации в ФНС"
+          description = "Отправка информации в ФНС",
+          version = "0"
         )
       ),
-      json = """{"requestType":"create","requestType":null,"debug":{"mode":"stub","stub":"success"},"stream":{"classShortName":"CLIENT","methodShortName":"EXPORT2FNS","transportParams":"some transport","description":"Отправка информации в ФНС"}}"""
+      json = """{"requestType":"create","requestType":null,"debug":{"mode":"stub","stub":"success"},"stream":{"classShortName":"CLIENT","methodShortName":"EXPORT2FNS","transportParams":"some transport","description":"Отправка информации в ФНС","version":"0"}}"""
     ),
     STREAM_UPDATE(
       request = StreamUpdateRequest(
@@ -56,10 +57,11 @@ class RequestV1SerializationTests {
           methodShortName = "EXPORT2FNS",
           transportParams = "some transport",
           description = "Отправка информации в ФНС",
+          version = "0",
           id = "12345"
         )
       ),
-      json = """{"requestType":"update","requestType":null,"debug":null,"stream":{"classShortName":"CLIENT","methodShortName":"EXPORT2FNS","transportParams":"some transport","description":"Отправка информации в ФНС","id":"12345"}}"""
+      json = """{"requestType":"update","requestType":null,"debug":null,"stream":{"classShortName":"CLIENT","methodShortName":"EXPORT2FNS","transportParams":"some transport","description":"Отправка информации в ФНС","version":"0","id":"12345"}}"""
     ),
     STREAM_DELETE(
       request = StreamDeleteRequest(streamId = "12345"),
@@ -70,12 +72,12 @@ class RequestV1SerializationTests {
       json = """{"requestType":"read","requestType":null,"debug":null,"streamId":"12345"}"""
     ),
     STREAM_ENABLE(
-      request = StreamEnableRequest(streamId = "12345"),
-      json = """{"requestType":"enable","requestType":null,"debug":null,"streamId":"12345"}"""
+      request = StreamEnableRequest(streamId = "12345", version = "0"),
+      json = """{"requestType":"enable","requestType":null,"debug":null,"streamId":"12345","version":"0"}"""
     ),
     STREAM_DISABLE(
-      request = StreamDisableRequest(streamId = "12345"),
-      json = """{"requestType":"disable","requestType":null,"debug":null,"streamId":"12345"}"""
+      request = StreamDisableRequest(streamId = "12345", version = "0"),
+      json = """{"requestType":"disable","requestType":null,"debug":null,"streamId":"12345","version":"0"}"""
     ),
     STREAM_SEARCH(
       request = StreamSearchRequest(
@@ -106,11 +108,12 @@ class RequestV1SerializationTests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "0",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
       ),
-      json = """{"responseType":"create","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false}}"""
+      json = """{"responseType":"create","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false}}"""
     ),
     STREAM_UPDATE(
       response = StreamUpdateResponse(
@@ -120,11 +123,12 @@ class RequestV1SerializationTests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "0",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
       ),
-      json = """{"responseType":"update","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false}}"""
+      json = """{"responseType":"update","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false}}"""
     ),
     STREAM_READ(
       response = StreamReadResponse(
@@ -134,11 +138,12 @@ class RequestV1SerializationTests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "0",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
       ),
-      json = """{"responseType":"read","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false}}"""
+      json = """{"responseType":"read","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false}}"""
     ),
     STREAM_SEARCH(
       response = StreamSearchResponse(
@@ -149,6 +154,7 @@ class RequestV1SerializationTests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "0",
             id = "12345"
           ), StreamResponseObject(
             classShortName = "KRED_CORP",
@@ -156,12 +162,13 @@ class RequestV1SerializationTests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "0",
             id = "12346"
           )
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
       ),
-      json = """{"responseType":"search","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"streams":[{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false},{"classShortName":"KRED_CORP","methodShortName":"SIGN","transportParams":"some params ...","description":"some stream ...","id":"12346","active":false}]}"""
+      json = """{"responseType":"search","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"streams":[{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false},{"classShortName":"KRED_CORP","methodShortName":"SIGN","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12346","active":false}]}"""
     ),
     STREAM_DELETE(
       response = StreamDeleteResponse(
@@ -171,11 +178,12 @@ class RequestV1SerializationTests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "0",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message...")),
       ),
-      json = """{"responseType":"delete","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false}}"""
+      json = """{"responseType":"delete","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false}}"""
     ),
     STREAM_ENABLE(
       response = StreamEnableResponse(
@@ -185,11 +193,12 @@ class RequestV1SerializationTests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "0",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message...")),
       ),
-      json = """{"responseType":"enable","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false}}"""
+      json = """{"responseType":"enable","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false}}"""
     ),
     STREAM_DISABLE(
       response = StreamDisableResponse(
@@ -199,11 +208,12 @@ class RequestV1SerializationTests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "0",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message...")),
       ),
-      json = """{"responseType":"disable","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false}}"""
+      json = """{"responseType":"disable","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"stream":{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false}}"""
     ),
     STREAM_ACCESSIBLE(
       response = StreamAccessibleResponse(
@@ -214,6 +224,7 @@ class RequestV1SerializationTests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "0",
             id = "12345"
           ), StreamResponseObject(
             classShortName = "KRED_CORP",
@@ -221,12 +232,13 @@ class RequestV1SerializationTests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "0",
             id = "12346"
           )
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
       ),
-      json = """{"responseType":"accessible","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"streams":[{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","id":"12345","active":false},{"classShortName":"KRED_CORP","methodShortName":"SIGN","transportParams":"some params ...","description":"some stream ...","id":"12346","active":false}]}"""
+      json = """{"responseType":"accessible","responseType":null,"result":null,"errors":[{"code":"A1","group":"G1","message":"Some message..."}],"streams":[{"classShortName":"KRED_CORP","methodShortName":"PAYMENT_CALENDAR","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12345","active":false},{"classShortName":"KRED_CORP","methodShortName":"SIGN","transportParams":"some params ...","description":"some stream ...","version":"0","id":"12346","active":false}]}"""
     );
   }
 
@@ -234,28 +246,28 @@ class RequestV1SerializationTests {
   @EnumSource
   fun serializeRequestTest(case: RequestEqualJsonCase) =
     assertEquals(
-      apiV1RequestSerialize(case.request), case.json
+      case.json, apiV1RequestSerialize(case.request),
     )
 
   @ParameterizedTest
   @EnumSource
   fun deserializeRequestTest(case: RequestEqualJsonCase) =
     assertEquals(
-      apiV1RequestDeserialize(case.json), case.request
+      case.request, apiV1RequestDeserialize(case.json),
     )
 
   @ParameterizedTest
   @EnumSource
   fun serializeResponseTest(case: ResponseEqualJsonCase) =
     assertEquals(
-      apiV1ResponseSerialize(case.response), case.json
+      case.json, apiV1ResponseSerialize(case.response)
     )
 
   @ParameterizedTest
   @EnumSource
   fun deserializeResponseTest(case: ResponseEqualJsonCase) =
     assertEquals(
-      apiV1ResponseDeserialize(case.json), case.response
+      case.response, apiV1ResponseDeserialize(case.json)
     )
 
 }

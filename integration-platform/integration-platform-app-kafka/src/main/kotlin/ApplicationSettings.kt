@@ -3,38 +3,59 @@ package ru.pvn.integration.platform.kafka
 import ru.pvn.integration.platform.kafka.Mode.*
 import IPStreamProcessor
 import ru.pvn.integration.platform.repo.inmemory.RepoStreamInMemory
+import ru.pvn.learning.MetadataActualizerKafka
 import ru.pvn.learning.PgCredentials
 import ru.pvn.learning.RepoStreamInPg
+import ru.pvn.learning.actualizer.MetadataActualizer
 import ru.pvn.learning.repo.IRepoStream
-
 
 data class ApplicationSettings(
   val mode: Mode,
   val ipStreamProcessor: IPStreamProcessor,
-  val ipStreamRepo: IRepoStream
+  val ipStreamRepo: IRepoStream,
+  val metadataActualizer: MetadataActualizer,
 )
 
 enum class Mode {
   PROD, TEST, STUB
 }
 
-fun initApplicationSettings(applicationConfig: ApplicationConfig):  ApplicationSettings{
+fun initApplicationSettings(applicationConfig: ApplicationConfig): ApplicationSettings {
+  applicationConfig as ApplicationConfigData
+
   val mode = Mode.valueOf(applicationConfig.mode)
 
-  val pgCredentials = PgCredentials(
-    url = applicationConfig.pgUrl,
-    user = applicationConfig.pgUser,
-    password = applicationConfig.pgPassword
-  )
+  val pgCredentials = applicationConfig.run {
+    PgCredentials(
+      url = pgUrl,
+      user = pgUser,
+      password = pgPassword,
+      maximumPoolSize = pgMaximumPoolSize.run { if (isNotEmpty()) toInt() else 0 },
+      minimumIdle = pgMinimumIdle.run { if (isNotEmpty()) toInt() else 0 },
+      idleTimeout = pgIdleTimeout.run { if (isNotEmpty()) toLong() else 0L },
+      connectionTimeout = pgConnectionTimeout.run { if (isNotEmpty()) toLong() else 0L },
+    )
+  }
+
+  val streamRepo = when (mode) {
+    PROD -> RepoStreamInPg(pgCredentials)
+    TEST -> RepoStreamInMemory()
+    STUB -> IRepoStream.NONE
+  }
+
+  val metaActualizer = when (mode) {
+    PROD -> MetadataActualizerKafka(
+      producer = applicationConfig.createKafkaProducer(),
+      topic = applicationConfig.kafkaMetaActualizerTopic,
+      initiator = "appKafka",
+    )
+    else -> MetadataActualizer.NONE
+  }
 
   return ApplicationSettings(
     mode = mode,
     ipStreamProcessor = IPStreamProcessor(),
-    ipStreamRepo = when (mode) {
-      PROD -> RepoStreamInPg(pgCredentials)
-      TEST -> RepoStreamInMemory()
-      STUB -> IRepoStream.NONE
-    }
+    ipStreamRepo = streamRepo,
+    metadataActualizer = metaActualizer
   )
 }
-

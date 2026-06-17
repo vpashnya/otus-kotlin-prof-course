@@ -33,3 +33,15 @@ databaseChangeLog:
                   name: version
                   type: bigint
                   defaultValue: 1
+
+        - createIndex:
+            indexName: unique_stream_params
+            tableName: ip_stream
+            unique: true
+            columns:
+              - column:
+                  name: class_short_name
+              - column:
+                  name: method_short_name
+              - column:
+                  name: transport_params

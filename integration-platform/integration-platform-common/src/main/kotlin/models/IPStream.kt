@@ -1,7 +1,5 @@
 package ru.pvn.learning.models
 
-import ru.pvn.learning.models.IPStreamVersion
-
 data class IPStream(
   var id: IPStreamId = IPStreamId.NONE,
   var description: String = "",

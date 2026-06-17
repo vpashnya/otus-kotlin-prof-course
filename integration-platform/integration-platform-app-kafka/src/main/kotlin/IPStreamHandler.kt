@@ -42,7 +42,7 @@ class IPStreamHandler(
             request = record.value()
           )
 
-          val responseRecord = ProducerRecord(topics.outgoing, "IPStream", response)
+          val responseRecord = ProducerRecord(topics.outgoing, "", response)
 
           withContext(Dispatchers.IO) {
             producer.send(responseRecord)

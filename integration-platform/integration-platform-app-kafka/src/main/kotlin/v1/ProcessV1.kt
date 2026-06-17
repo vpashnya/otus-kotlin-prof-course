@@ -23,6 +23,7 @@ suspend fun processV1(
 ): String {
   val context = IPContext(
     streamRepo = applicationSettings.ipStreamRepo,
+    metadataActualizer = applicationSettings.metadataActualizer,
     workMode = when (applicationSettings.mode) {
       Mode.PROD -> IPWorkMode.PROD
       Mode.STUB -> IPWorkMode.STUB

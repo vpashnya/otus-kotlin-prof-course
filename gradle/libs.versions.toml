@@ -16,6 +16,8 @@ postgresql = "42.7.8"
 liquibase ="4.32.0"
 exposed = "1.2.0"
 testcontainers = "2.0.4"
+hikari = "5.1.0"
+koin_version = "4.1.1"
 
 # BASE
 jvm-compiler = "17"
@@ -43,9 +45,16 @@ jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.re
 jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter-version" }
 mockito = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-version" }
 
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin_version" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin_version" }
+koin-test-junit = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin_version" }
+
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor" }
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
@@ -66,6 +75,9 @@ liquibase-lib = { module = "org.liquibase:liquibase-core", version.ref = "liquib
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+
+hikari-cp = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+
 testcontainers-postgres = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
 
 [plugins]

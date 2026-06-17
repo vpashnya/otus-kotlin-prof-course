@@ -34,6 +34,7 @@ import ru.pvn.learning.models.IPExternalSystemId
 import ru.pvn.learning.models.IPStream
 import ru.pvn.learning.models.IPStreamFilter
 import ru.pvn.learning.models.IPStreamId
+import ru.pvn.learning.models.IPStreamVersion
 import ru.pvn.learning.models.IPWorkMode
 import ru.pvn.learning.stubs.IPStubs
 
@@ -161,7 +162,9 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
-          id = IPStreamId("12345")
+          version = IPStreamVersion("1"),
+          id = IPStreamId("12345"),
+
         )
       ),
       response = StreamCreateResponse(
@@ -172,6 +175,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "1",
           id = "12345"
         )
       )
@@ -186,6 +190,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = IPStreamVersion("1"),
           id = IPStreamId("12345")
         )
       ),
@@ -196,6 +201,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "1",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
@@ -211,6 +217,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = IPStreamVersion("1"),
           id = IPStreamId("12345")
         )
       ),
@@ -221,6 +228,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "1",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
@@ -236,6 +244,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = IPStreamVersion("1"),
           id = IPStreamId("12345")
         )
       ),
@@ -246,6 +255,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "1",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message...")),
@@ -261,6 +271,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = IPStreamVersion("1"),
           id = IPStreamId("12345")
         )
       ),
@@ -271,6 +282,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "1",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message...")),
@@ -287,6 +299,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = IPStreamVersion("1"),
           id = IPStreamId("12345")
         )
       ),
@@ -297,6 +310,7 @@ class MapperV1Tests {
           transportParams = "some params ...",
           description = "some stream ...",
           active = false,
+          version = "1",
           id = "12345"
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message...")),
@@ -313,6 +327,7 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = IPStreamVersion("1"),
             id = IPStreamId("12345")
           ),
           IPStream(
@@ -321,6 +336,7 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = IPStreamVersion("1"),
             id = IPStreamId("12346")
           )
         )
@@ -333,6 +349,7 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "1",
             id = "12345"
           ), StreamResponseObject(
             classShortName = "KRED_CORP",
@@ -340,13 +357,13 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "1",
             id = "12346"
           )
         ),
         errors = listOf(Error(code = "A1", group = "G1", message = "Some message..."))
       ),
-
-      ),
+    ),
     SEARCH(
       context = IPContext(
         command = IPCommand.SEARCH,
@@ -358,6 +375,7 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = IPStreamVersion("1"),
             id = IPStreamId("12345")
           ),
           IPStream(
@@ -366,6 +384,7 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = IPStreamVersion("1"),
             id = IPStreamId("12346")
           )
         )
@@ -378,6 +397,7 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "1",
             id = "12345"
           ), StreamResponseObject(
             classShortName = "KRED_CORP",
@@ -385,6 +405,7 @@ class MapperV1Tests {
             transportParams = "some params ...",
             description = "some stream ...",
             active = false,
+            version = "1",
             id = "12346"
           )
         ),

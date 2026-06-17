@@ -5,7 +5,7 @@ import org.slf4j.event.Level.INFO
 import ru.pvn.integration.platform.lib.cor.dsl.CorDslMarker
 import ru.pvn.integration.platform.lib.cor.dsl.DslPerformerChain
 import ru.pvn.learning.IPContext
-import ru.pvn.learning.models.IPState
+import ru.pvn.learning.models.IPState.FAILING
 import ru.pvn.learning.models.IPState.RUNNING
 import ru.pvn.learning.models.IPWorkMode.PROD
 import ru.pvn.learning.models.IPWorkMode.TEST
@@ -26,9 +26,17 @@ fun DslPerformerChain<IPContext>.repoProcess(title: String, func: DslPerformerCh
     func()
 
     performer {
-      conditionF { state == IPState.FAILING }
+      conditionF { state == FAILING }
       mainF {
         log(WARN) { "Ошибка при работе с БД: ${errors.last()}" }
+      }
+    }
+
+    performer {
+      conditionF { state == RUNNING }
+      mainF {
+        streamResponse = streamResponseFromRepo
+        streamsResponse = streamsResponseFromRepo
       }
     }
 

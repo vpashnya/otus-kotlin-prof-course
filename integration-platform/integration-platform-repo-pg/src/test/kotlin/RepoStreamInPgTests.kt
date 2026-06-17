@@ -22,11 +22,16 @@ class RepoStreamInPgTests {
         .withStartupTimeout(Duration.ofSeconds(300))
         .also { it.start() }
 
+
     val repoInPg: IRepoStream = RepoStreamInPg(
       PgCredentials(
         "jdbc:postgresql://localhost:5432/mydatabase",
         "myuser",
-        "mypassword"
+        "mypassword",
+        10,
+        5,
+        60000,
+        30000
       )
     )
   }

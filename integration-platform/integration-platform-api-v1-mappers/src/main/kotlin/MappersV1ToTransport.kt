@@ -103,7 +103,8 @@ fun IPStream.toTransport(): StreamResponseObject = StreamResponseObject(
   methodShortName = methodShortName,
   transportParams = transportParams,
   description = description,
-  active = active
+  active = active,
+  version = version.asString()
 )
 
 internal fun IPStreamId.toTransport() = takeIf { it != IPStreamId.NONE }?.asString()

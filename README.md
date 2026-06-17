@@ -26,24 +26,31 @@ Integration Platform - интеграционная платформа для б
 
 
 # Структура проекта
+## Древний монолит 
+1. [ancient-monolith](ancient-monolith) - Заглушка для приема сообщений от интеграционной платформы
 
-## Проект интеграционная платформа
-1. [integration-module](integration-platform/integration-module) - Модуль для приложения "Древний Монолит"
-2. [integration-service](integration-platform/integration-service) - Интеграционный сервис
-3. [integration-platform-common](integration-platform/integration-platform-common) - Внутренние модели
-4. [integration-platform-api-v1](integration-platform/integration-platform-api-v1) - Api версия 1
-5. [integration-platform-api-v1-mappers](integration-platform/integration-platform-api-v1-mappers) - Мапперы для api версия 1   
-6. [integration-platform-business-logic](integration-platform/integration-platform-business-logic) - Бизнес логика
-7. [integration-platform-app-ktor](integration-platform/integration-platform-app-ktor) - Веб приложение на ktor 
-8. [integration-platform-app-kafka](integration-platform/integration-platform-app-kafka) - Транспортное приложение для kafka
-
+## Интеграционная платформа
+1. [integration-platform-common](integration-platform/integration-platform-common) - Внутренние модели
+2. [integration-platform-api-v1](integration-platform/integration-platform-api-v1) - Api версия 1
+3. [integration-platform-api-v1-mappers](integration-platform/integration-platform-api-v1-mappers) - Мапперы для api версия 1   
+4. [integration-platform-business-logic](integration-platform/integration-platform-business-logic) - Бизнес логика
+5. [integration-platform-app-ktor](integration-platform/integration-platform-app-ktor) - Веб приложение на ktor 
+6. [integration-platform-app-kafka](integration-platform/integration-platform-app-kafka) - Транспортное приложение для kafka
+7. [integration-platform-lib-cor](integration-platform/integration-platform-lib-cor) - Модуль с функциональностью "Цепочка ответственности"
+8. [integration-platform-repo-tests](integration-platform/integration-platform-repo-tests) - Модуль с интеграционными тестами репозитория
+9. [integration-platform-repo-inmemory](integration-platform/integration-platform-repo-inmemory) - Inmemory репозиторий на sqldelight
+10. [integration-platform-repo-pg](integration-platform/integration-platform-repo-pg) - Persistent репозиторий на pgsql
+11. [integration-processor-kafka](integration-platform/integration-processor-kafka) - Обработчик сообщений в древний монолит через kafka
+12. [integration-processor-ktor](integration-platform/integration-processor-ktor) - Обработчик сообщений в древний монолит через rest
+13. [metadata-actualizer](integration-platform/metadata-actualizer) - Модуль актуализации метамодели в обработчиках  
+14. [testing-machine](integration-platform/testing-machine) - Тестовое приложение для демонстрации
+ 
 ## Gradle плагины
 1. Модуль 2: Расширенные возможности Kotlin<br>
    1. [BuildPluginJvm.kt](build-plugin/src/main/kotlin/BuildPluginJvm.kt) - Плагин для сборки проектов JVM
    2. [BuildPluginMultiplatform.kt](build-plugin/src/main/kotlin/BuildPluginMultiplatform.kt) - Плагин для сборки мультиплатформенных проектов 
 
 ## Подпроекты для занятий по языку Kotlin
-
 1. Модуль 1: Введение в Kotlin
     1. [m1l1-first](lessons/m1l1-first) - Вводное занятие, создание первой программы на Kotlin
     2. [m1l2-basic](lessons/m1l2-basic) - Основные конструкции Kotlin
@@ -60,12 +67,12 @@ Integration Platform - интеграционная платформа для б
 
 ### Сборка
 ```shell
-docker compose -f docker-compose.yml build
+docker compose -f docker-compose.build.yml build
 ```
 
 ### Запуск
 ```shell
-docker compose -f docker-compose.yml up -d integration-service
+docker compose -f docker-compose.yml up -d testing-machine
 ```
 
 

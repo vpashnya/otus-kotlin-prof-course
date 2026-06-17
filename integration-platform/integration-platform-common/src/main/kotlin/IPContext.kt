@@ -1,12 +1,13 @@
 package ru.pvn.learning
 
+import kotlinx.datetime.Instant
 import ru.pvn.learning.models.IPCommand
 import ru.pvn.learning.models.IPError
 import ru.pvn.learning.models.IPState
 import ru.pvn.learning.models.IPWorkMode
 import ru.pvn.learning.stubs.IPStubs
 import ru.pvn.learning.models.IPRequestId
-import kotlinx.datetime.Instant
+import ru.pvn.learning.actualizer.MetadataActualizer
 import ru.pvn.learning.models.IPExternalSystemId
 import ru.pvn.learning.models.IPStream
 import ru.pvn.learning.models.IPStreamFilter
@@ -35,12 +36,14 @@ data class IPContext(
   var streamFilterRequestValidated: IPStreamFilter = IPStreamFilter(),
 
   var streamRepo: IRepoStream = IRepoStream.NONE,
+
   var streamRequestToRepo: IPStream = IPStream(),
   var streamFilterRequestToRepo: IPStreamFilter = IPStreamFilter(),
   var streamResponseFromRepo: IPStream = IPStream(),
   var streamsResponseFromRepo: MutableList<IPStream> = mutableListOf(),
 
   var requesterExternalSystemId: IPExternalSystemId = IPExternalSystemId.NONE,
+  var metadataActualizer: MetadataActualizer = MetadataActualizer.NONE,
 )
 
 

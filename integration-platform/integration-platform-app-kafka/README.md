@@ -3,17 +3,22 @@
 ## Запуск проекта 
 `docker compose -f docker-compose.yaml up -d app-kafka`
 
-# Параметры среды (пример)
+## Параметры среды (пример)
 MODE=PROD
 KAFKA_HOSTS="127.0.0.1:9092"
 KAFKA_GROUP_ID="integration-platform"
 KAFKA_IP_STREAM_TOPIC_V1_IN="ip.stream.v1.in"
 KAFKA_IP_STREAM_TOPIC_V1_OUT="ip.stream.v1.out"
+KAFKA_META_ACTUALIZER_TOPIC="metadata.actualizer"
 PG_URL=jdbc:postgresql://localhost:5432/mydatabase
 PG_USER=myuser
 PG_PASSWORD=mypassword
+PG_MAXIMUM_POOL_SIZE=10
+PG_MINIMUM_IDLE=5
+PG_IDLE_TIMEOUT=60000
+PG_CONNECTION_TIMEOUT=30000
 
-# Запросы (примеры)
+## Запросы (примеры)
 
 ```shell
 echo '{"requestType":"create","debug":{"mode":"stub","stub":"success"},"stream":{"classShortName":"CLIENT","methodShortName":"EXPORT2FNS","transportParams":"some transport","description":"Отправка информации в ФНС"}}' | 
@@ -21,7 +26,7 @@ docker exec -i kafka1 /usr/bin/kafka-console-producer --topic ip.stream.v1.in --
 ```
 
 ```shell
-echo '{"requestType":"update","requestType":null,"debug":null,"stream":{"classShortName":"CLIENT","methodShortName":"EXPORT2FNS","transportParams":"some transport","description":"Отправка информации в ФНС","id":"12345"}}' |
+echo '{"requestType":"update","requestType":null,"debug":null,"stream":{"classShortName":"CLIENT","methodShortName":"EXPORT2FNS","transportParams":"some transport","description":"Отправка информации в ФНС","id":"12345","version":"1"}}' |
 docker exec -i kafka1 /usr/bin/kafka-console-producer --topic ip.stream.v1.in --bootstrap-server kafka1:9092
 ```
 
@@ -36,12 +41,12 @@ docker exec -i kafka1 /usr/bin/kafka-console-producer --topic ip.stream.v1.in --
 ```
 
 ```shell
-echo '{"requestType":"enable","requestType":null,"debug":null,"streamId":"12345"}' |
+echo '{"requestType":"enable","requestType":null,"debug":null,"streamId":"12345","version":"1"}' |
 docker exec -i kafka1 /usr/bin/kafka-console-producer --topic ip.stream.v1.in --bootstrap-server kafka1:9092
 ``` 
 
 ```shell
-echo '{"requestType":"disable","requestType":null,"debug":null,"streamId":"12345"}' |
+echo '{"requestType":"disable","requestType":null,"debug":null,"streamId":"12345","version":"1"}' |
 docker exec -i kafka1 /usr/bin/kafka-console-producer --topic ip.stream.v1.in --bootstrap-server kafka1:9092
 ```
 
